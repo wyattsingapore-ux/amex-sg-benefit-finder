@@ -45,10 +45,13 @@ def main():
     mp=DATA/'merchants.json'; cp=DATA/'geocodes.json'
     payload=json.loads(mp.read_text(encoding='utf-8'))
     cache=json.loads(cp.read_text(encoding='utf-8')) if cp.exists() else {}
-    tok=get_token(); new=failed=0
+    tok=get_token(); new=failed=skipped=0
     if not tok:
         print('No OneMap credentials/token found; skipping new geocoding and preserving cache.')
     for m in payload['merchants']:
+        if m.get('geocode_skip'):
+            skipped+=1
+            continue
         query=(m.get('postal_code') or m.get('address') or m.get('name') or '').strip()
         key=query.lower(); hit=cache.get(key)
         if not hit and tok and query:
@@ -67,6 +70,6 @@ def main():
     cp.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding='utf-8')
     mp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
     mapped=sum(m.get('lat') is not None and m.get('lng') is not None for m in payload['merchants'])
-    print(json.dumps({'mapped':mapped,'total':len(payload['merchants']),'new_cache_entries':new,'failures':failed},indent=2))
+    print(json.dumps({'mapped':mapped,'total':len(payload['merchants']),'new_cache_entries':new,'failures':failed,'skipped_approximate':skipped},indent=2))
 
 if __name__=='__main__': main()
