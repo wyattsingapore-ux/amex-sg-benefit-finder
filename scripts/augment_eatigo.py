@@ -4,12 +4,12 @@
 Scope is intentionally simple:
 - discover Eatigo restaurant/branch membership across all result pages;
 - keep the Eatigo branch link;
-- fetch/cache only the public street address for mapping and LC matching;
+- enrich with public street addresses when available for mapping and LC matching;
 - do NOT collect time slots or discount percentages.
 
-A successful full snapshot is cached for 7 days. If Eatigo is temporarily
-unavailable later, the last good snapshot can be reused instead of publishing a
-severely truncated list.
+The restaurant list is the primary dataset. Address lookup is best-effort and
+must never make a complete Eatigo list fail to deploy. Only verified addresses
+are eligible for map pins and Eatigo+LC matching.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 
 import requests
 from bs4 import BeautifulSoup
-from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError, async_playwright
 
 from scripts import refresh_data as base
 
@@ -107,6 +107,8 @@ def head_score(eatigo: dict, merchant: dict) -> float:
 
 
 def same_location(eatigo: dict, merchant: dict) -> bool:
+    if eatigo.get("address_verified") is False:
+        return False
     ep, mp = eatigo.get("postal_code"), merchant.get("postal_code")
     if ep and mp:
         return str(ep) == str(mp)
@@ -118,6 +120,8 @@ def same_location(eatigo: dict, merchant: dict) -> bool:
 
 
 def choose_lc_match(eatigo: dict, merchants: list[dict], used: set[int]) -> tuple[int | None, str | None]:
+    if eatigo.get("address_verified") is False:
+        return None, None
     candidates = []
     for i, m in enumerate(merchants):
         if i in used or not m.get("lc") or m.get("category") != "dining":
@@ -184,9 +188,24 @@ async def click_page_number(page, page_num: int, previous_ids: set[str]) -> None
         page_num,
     )
     if not clicked:
+        # Fallback for compact pagination windows: use the visible next control.
+        clicked = await page.evaluate(
+            """() => {
+              const els = [...document.querySelectorAll('button,a')].filter(e => e.offsetParent !== null);
+              const next = els.find(e => {
+                const t = (e.textContent || '').trim().toLowerCase();
+                const a = (e.getAttribute('aria-label') || '').toLowerCase();
+                return t === 'next' || t === '›' || t === '>' || a.includes('next');
+              });
+              if (!next) return false;
+              next.click();
+              return true;
+            }"""
+        )
+    if not clicked:
         raise RuntimeError(f"Could not find Eatigo pagination control for page {page_num}")
 
-    for _ in range(35):
+    for _ in range(40):
         await page.wait_for_timeout(300)
         rows = await anchors_for_page(page)
         ids = {BRANCH_RE.search(x.get("href", "")).group(1) for x in rows if BRANCH_RE.search(x.get("href", ""))}
@@ -233,8 +252,9 @@ async def discover_eatigo_browser() -> tuple[list[dict], int]:
         await browser.close()
 
     discovered = list(found.values())
-    if len(discovered) < max(100, int(total * 0.90)):
-        raise RuntimeError(f"Eatigo crawl truncated: advertised={total}, discovered={len(discovered)}")
+    minimum = max(200, int(total * 0.90))
+    if len(discovered) < minimum:
+        raise RuntimeError(f"Eatigo crawl truncated: advertised={total}, discovered={len(discovered)}, minimum={minimum}")
     return discovered, total
 
 
@@ -259,7 +279,13 @@ def parse_branch_detail(html: str, fallback_name: str, url: str) -> dict | None:
             address = min(candidates, key=len)
     if not address or "singapore" not in address.lower():
         return None
-    return {"name": name, "address": address, "postal_code": base.postal(address), "url": url}
+    return {
+        "name": name,
+        "address": address,
+        "postal_code": base.postal(address),
+        "url": url,
+        "address_verified": True,
+    }
 
 
 def read_json(path: Path, default):
@@ -281,9 +307,13 @@ def age_ok(value: str | None, max_age: timedelta) -> bool:
 
 def fetch_branch_detail(item: dict) -> tuple[str, dict | None, bool, str | None]:
     last = None
-    for attempt in range(3):
+    for attempt in range(2):
         try:
-            r = requests.get(item["url"], headers={"User-Agent": UA, "Accept-Language": "en-SG,en;q=0.9"}, timeout=30)
+            r = requests.get(
+                item["url"],
+                headers={"User-Agent": UA, "Accept-Language": "en-SG,en;q=0.9"},
+                timeout=20,
+            )
             r.raise_for_status()
             detail = parse_branch_detail(r.text, item["name"], item["url"])
             if detail:
@@ -297,60 +327,84 @@ def fetch_branch_detail(item: dict) -> tuple[str, dict | None, bool, str | None]
     return item["branch_id"], None, False, str(last)
 
 
-def add_branch_addresses(rows: list[dict], advertised_total: int) -> list[dict]:
+def approximate_row(row: dict) -> dict:
+    _, qualifier = split_listing_name(row.get("name") or "")
+    label = clean(qualifier) or "Singapore"
+    if "singapore" not in label.lower():
+        label = f"{label}, Singapore"
+    return {
+        **row,
+        "address": label,
+        "postal_code": None,
+        "address_verified": False,
+    }
+
+
+def add_branch_addresses(rows: list[dict]) -> list[dict]:
+    """Best-effort address enrichment; never reduces the discovered list."""
     cache = read_json(BRANCH_CACHE, {})
     now = datetime.now(timezone.utc).isoformat()
-    need = []
     enriched: dict[str, dict] = {}
+    need: list[dict] = []
 
     for row in rows:
         entry = cache.get(row["branch_id"], {})
         if age_ok(entry.get("fetched_at"), BRANCH_CACHE_MAX_AGE):
+            if entry.get("non_singapore"):
+                continue
             if entry.get("address"):
-                enriched[row["branch_id"]] = {**row, **{k: entry.get(k) for k in ("name", "address", "postal_code", "url") if entry.get(k)}}
-            continue
+                enriched[row["branch_id"]] = {
+                    **row,
+                    **{k: entry.get(k) for k in ("name", "address", "postal_code", "url") if entry.get(k)},
+                    "address_verified": True,
+                }
+                continue
         need.append(row)
 
-    failures = []
+    failures = 0
+    non_sg = 0
     if need:
-        with ThreadPoolExecutor(max_workers=8) as pool:
+        with ThreadPoolExecutor(max_workers=4) as pool:
             futures = {pool.submit(fetch_branch_detail, row): row for row in need}
             for fut in as_completed(futures):
                 row = futures[fut]
-                bid, detail, non_sg, error = fut.result()
+                bid, detail, is_non_sg, error = fut.result()
                 if detail:
                     cache[bid] = {**detail, "fetched_at": now}
                     enriched[bid] = {**row, **detail}
-                elif non_sg:
+                elif is_non_sg:
+                    non_sg += 1
                     cache[bid] = {"non_singapore": True, "fetched_at": now}
                 else:
+                    failures += 1
                     stale = cache.get(bid, {})
                     if stale.get("address"):
-                        enriched[bid] = {**row, **{k: stale.get(k) for k in ("name", "address", "postal_code", "url") if stale.get(k)}}
-                    else:
-                        failures.append((bid, error or "address not found"))
-
-    for row in rows:
-        bid = row["branch_id"]
-        if bid in enriched:
-            continue
-        entry = cache.get(bid, {})
-        if entry.get("address"):
-            enriched[bid] = {**row, **{k: entry.get(k) for k in ("name", "address", "postal_code", "url") if entry.get(k)}}
+                        enriched[bid] = {
+                            **row,
+                            **{k: stale.get(k) for k in ("name", "address", "postal_code", "url") if stale.get(k)},
+                            "address_verified": True,
+                        }
 
     DATA.mkdir(exist_ok=True)
     BRANCH_CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
-    out = list(enriched.values())
-    minimum = max(200, int(advertised_total * 0.72))
+
+    out = []
+    for row in rows:
+        if looks_non_singapore(row.get("name") or ""):
+            continue
+        entry = cache.get(row["branch_id"], {})
+        if entry.get("non_singapore"):
+            continue
+        out.append(enriched.get(row["branch_id"]) or approximate_row(row))
+
+    verified = sum(bool(x.get("address_verified")) for x in out)
     print(json.dumps({
-        "eatigo_advertised_region_results": advertised_total,
         "eatigo_discovered_branches": len(rows),
-        "eatigo_singapore_addresses": len(out),
-        "eatigo_address_failures": len(failures),
-        "minimum_required": minimum,
+        "eatigo_singapore_list": len(out),
+        "eatigo_verified_addresses": verified,
+        "eatigo_address_lookup_failures": failures,
+        "eatigo_explicit_non_singapore": non_sg,
     }, indent=2))
-    if len(out) < minimum:
-        raise RuntimeError(f"Eatigo Singapore address set too small: {len(out)}; expected at least {minimum}. Sample failures={failures[:3]}")
     return out
 
 
@@ -379,7 +433,9 @@ def get_eatigo_outlets() -> tuple[list[dict], int, str]:
         return fresh[0], fresh[1], "fresh-cache"
     try:
         discovered, total = asyncio.run(discover_eatigo_browser())
-        rows = add_branch_addresses(discovered, total)
+        rows = add_branch_addresses(discovered)
+        if len(rows) < 200:
+            raise RuntimeError(f"Eatigo Singapore list unexpectedly small after filtering: {len(rows)}")
         save_snapshot(rows, total)
         return rows, total, "live-refresh"
     except Exception as exc:
@@ -407,8 +463,6 @@ def main() -> int:
     used_merchants: set[int] = set()
     matched = 0
     for e in eatigo_outlets:
-        if looks_non_singapore(e.get("name") or ""):
-            continue
         head, location = split_listing_name(e["name"])
         best_i, note = choose_lc_match(e, merchants, used_merchants)
         if best_i is not None:
@@ -422,15 +476,33 @@ def main() -> int:
             matched += 1
             continue
 
+        verified = bool(e.get("address_verified"))
         merchants.append({
-            "name": e["name"], "brand": head, "address": e["address"], "postal_code": e.get("postal_code"),
-            "category": "dining", "ld": False, "lc": False, "gha": False, "eatigo": True,
-            "ld_source": None, "lc_section": None, "match_note": None,
-            "gha_hotel": None, "gha_source": None, "gha_match_note": None, "gha_tiers": None,
-            "eatigo_branch_id": e["branch_id"], "eatigo_url": e["url"], "eatigo_location": location or None,
+            "name": e["name"],
+            "brand": head,
+            "address": e["address"],
+            "postal_code": e.get("postal_code"),
+            "category": "dining",
+            "ld": False,
+            "lc": False,
+            "gha": False,
+            "eatigo": True,
+            "ld_source": None,
+            "lc_section": None,
+            "match_note": None,
+            "gha_hotel": None,
+            "gha_source": None,
+            "gha_match_note": None,
+            "gha_tiers": None,
+            "eatigo_branch_id": e["branch_id"],
+            "eatigo_url": e["url"],
+            "eatigo_location": location or None,
             "eatigo_match_note": None,
+            "eatigo_address_verified": verified,
+            "geocode_skip": not verified,
             "id": base.make_id("Eatigo " + e["branch_id"], e["address"], e.get("postal_code")),
-            "lat": None, "lng": None,
+            "lat": None,
+            "lng": None,
         })
 
     payload.setdefault("sources", {})["eatigo"] = SEARCH_URL
@@ -438,7 +510,10 @@ def main() -> int:
     payload["stats"]["eatigo_lc"] = sum(bool(m.get("eatigo")) and bool(m.get("lc")) for m in merchants)
     payload["eatigo_advertised_region_results"] = advertised_total
     payload["eatigo_source_mode"] = source_mode
-    payload["merchants"] = sorted(merchants, key=lambda x: (str(x.get("name", "")).lower(), str(x.get("postal_code") or "")))
+    payload["merchants"] = sorted(
+        merchants,
+        key=lambda x: (str(x.get("name", "")).lower(), str(x.get("postal_code") or "")),
+    )
 
     actual = [m for m in payload["merchants"] if m.get("eatigo")]
     if len(actual) < 200:
@@ -448,6 +523,7 @@ def main() -> int:
     print(json.dumps({
         "eatigo_advertised_region_results": advertised_total,
         "eatigo_singapore_list": len(actual),
+        "eatigo_verified_addresses": sum(bool(m.get("eatigo_address_verified")) or (m.get("eatigo") and m.get("lc")) for m in actual),
         "eatigo_lc": matched,
         "source_mode": source_mode,
         "time_slots_collected": False,
