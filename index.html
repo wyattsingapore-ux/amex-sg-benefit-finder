@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AMEX SG Benefit Finder — Love Dining & Lifestyle Credit</title>
+  <meta name="description" content="Unofficial map and searchable list for AMEX Singapore Love Dining and Platinum Credit Card Fashion & Dining Credit merchants.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="hero">
+  <div><div class="eyebrow">UNOFFICIAL COMMUNITY TOOL</div><h1>AMEX SG Benefit Finder</h1>
+    <p>Find <strong>Love Dining</strong>, <strong>Lifestyle Credit</strong>, or outlets eligible for <strong>both</strong>.</p></div>
+  <div class="updated" id="updated">Loading merchant data…</div>
+</header>
+<main>
+  <section class="controls card">
+    <div class="control"><label for="benefitFilter">Benefit</label><select id="benefitFilter">
+      <option value="ld">Love Dining (LD)</option><option value="lc">Lifestyle Credit (LC)</option><option value="both" selected>Both — LD + Lifestyle Credit</option>
+    </select></div>
+    <div class="control"><label for="categoryFilter">Category</label><select id="categoryFilter"><option value="all">All</option><option value="dining">Dining</option><option value="fashion">Fashion</option></select></div>
+    <div class="control grow"><label for="searchBox">Merchant, hotel, mall, street or postal code</label><div class="search-row"><input id="searchBox" type="search" placeholder="e.g. Prego, ION Orchard, 238801"><button id="findBtn">Find</button></div></div>
+    <button id="locateBtn" class="secondary">◎ Use my location</button>
+  </section>
+  <section class="stats" aria-live="polite"><div><strong id="resultCount">0</strong><span>matching outlets</span></div><div><strong id="mappedCount">0</strong><span>shown on map</span></div><label class="viewport-toggle"><input id="viewportOnly" type="checkbox"> Show only current map view</label></section>
+  <div id="bootstrapBanner" class="banner hidden"></div>
+  <section id="map" class="map card" aria-label="Merchant map"></section>
+  <section class="list-head"><div><h2>Merchants</h2><p id="listHint">Select a benefit or search above.</p></div><div class="sort-box"><label for="sortOrder">Sort</label><select id="sortOrder"><option value="az">A–Z</option><option value="nearest">Nearest</option></select></div></section>
+  <section id="merchantList" class="merchant-list"></section>
+</main>
+<footer><p>This is an unofficial finder and is not affiliated with American Express. Eligibility, participating outlets and terms can change; verify with American Express before spending.</p>
+<p><a id="ldHotelsSource" target="_blank" rel="noopener">Love Dining Hotels</a> · <a id="ldRestaurantsSource" target="_blank" rel="noopener">Love Dining Restaurants</a> · <a id="lcSource" target="_blank" rel="noopener">Lifestyle Credit merchant PDF</a></p></footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="app.js"></script>
+</body></html>
