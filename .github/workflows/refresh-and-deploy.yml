@@ -26,9 +26,6 @@ jobs:
           python-version: '3.12'
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Check system Chrome for lightweight Eatigo list crawl
-        run: |
-          which google-chrome || which google-chrome-stable || which chromium || which chromium-browser
       - name: Restore OneMap geocode cache
         uses: actions/cache@v4
         with:
@@ -40,7 +37,7 @@ jobs:
         run: python -m scripts.refresh_data_fixed
       - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
         run: python -m scripts.augment_gha
-      - name: Add Eatigo Singapore restaurant list (no time-slot sync)
+      - name: Add Eatigo Singapore restaurant list (HTTP only, no slot sync)
         run: python -m scripts.augment_eatigo
       - name: Verify OneMap repository secrets
         env:
