@@ -34,9 +34,9 @@ jobs:
           restore-keys: |
             onemap-geocodes-
       - name: Refresh official AMEX merchant sources
-        run: python scripts/refresh_data_fixed.py
+        run: python -m scripts.refresh_data_fixed
       - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
-        run: python scripts/augment_gha.py
+        run: python -m scripts.augment_gha
       - name: Verify OneMap repository secrets
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
