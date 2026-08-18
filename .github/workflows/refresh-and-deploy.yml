@@ -33,7 +33,24 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
       - name: Install Chromium for Eatigo pagination
-        run: python -m playwright install --with-deps chromium
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python -m playwright install --with-deps chromium 2>&1 | tee chromium-install.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "Automated diagnostic from GitHub Actions run $GITHUB_RUN_NUMBER."
+              echo
+              echo '```text'
+              tail -n 220 chromium-install.log
+              echo '```'
+            } > chromium-failure.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo Chromium setup failure - run $GITHUB_RUN_NUMBER" --body-file chromium-failure.md || true
+            exit "$status"
+          fi
       - name: Restore OneMap and Eatigo caches
         uses: actions/cache@v4
         with:
