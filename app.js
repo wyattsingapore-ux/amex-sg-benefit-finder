@@ -50,7 +50,7 @@ function current() {
   );
 
   if (q) {
-    rows = rows.filter(m => [m.name, m.brand, m.gha_hotel, m.address, m.postal_code]
+    rows = rows.filter(m => [m.name, m.brand, m.gha_hotel, m.eatigo_location, m.address, m.postal_code]
       .filter(Boolean).join(' ').toLowerCase().includes(q));
   }
 
@@ -97,23 +97,9 @@ function ghaTierNote(m) {
   return `<div class="gha-note"><strong>DISCOVERY dining:</strong> Silver ${t.silver}% · Gold ${t.gold}% · Platinum ${t.platinum}% · Titanium ${t.titanium}%</div>`;
 }
 
-function slotLabel(s) {
-  let day = s.date || '';
-  if (day) {
-    const d = new Date(`${day}T00:00:00`);
-    if (!Number.isNaN(d.getTime())) day = d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
-  }
-  return `${day ? day + ' ' : ''}${s.time} −${s.discount}%`;
-}
-
 function eatigoNote(m) {
   if (!m.eatigo) return '';
-  const slots = Array.isArray(m.eatigo_slots) ? m.eatigo_slots.slice(0, 8) : [];
-  const best = m.eatigo_max_discount != null ? `Up to ${m.eatigo_max_discount}% in currently visible slots.` : 'Time-based discounts vary.';
-  const pills = slots.length
-    ? `<div class="slot-row">${slots.map(s => `<span class="slot">${esc(slotLabel(s))}</span>`).join('')}</div>`
-    : '';
-  return `<div class="eatigo-note"><strong>Eatigo:</strong> ${esc(best)}${pills}<small>Availability changes by date/time; check Eatigo before booking.</small></div>`;
+  return '<div class="eatigo-note"><strong>Eatigo:</strong> Listed on Eatigo. Open Eatigo to check the current available times and discount.</div>';
 }
 
 function benefitText(m) {
@@ -127,9 +113,15 @@ function benefitText(m) {
 
 function updateNotice(rows) {
   const banner = $('bootstrapBanner');
+  const mode = $('benefitFilter').value;
   if (payload.bootstrap_lc_only) {
     banner.classList.remove('hidden');
     banner.textContent = 'Bootstrap preview: Lifestyle Credit data is loaded, but Love Dining requires a live refresh.';
+    return;
+  }
+  if (mode === 'eatigo' && rows.length && markers.length < rows.length) {
+    banner.classList.remove('hidden');
+    banner.innerHTML = `<strong>${rows.length} Eatigo restaurants found.</strong> Eatigo List is list-first; only outlets with a verified address from another benefit source are pinned precisely on the map.`;
     return;
   }
   if (rows.length && markers.length === 0) {
@@ -150,8 +142,8 @@ function listHintForMode(mode) {
   if (mode === 'both') return 'Only outlets matched in both official AMEX sources at the same location.';
   if (mode === 'gha') return 'Singapore outlets on the official Pan Pacific DISCOVERY participating restaurant list.';
   if (mode === 'ghalc') return 'GHA dining outlets that also match an AMEX Lifestyle Credit outlet at the same location.';
-  if (mode === 'eatigo') return 'Current Singapore restaurants found on Eatigo, with time-based discounts refreshed daily.';
-  if (mode === 'eatigolc') return 'Eatigo restaurants that also match an AMEX Lifestyle Credit outlet at the same location. This is an eligibility intersection, not a guarantee that every transaction will stack.';
+  if (mode === 'eatigo') return 'Restaurants listed on Eatigo Singapore. Open Eatigo to check the current discount and booking time.';
+  if (mode === 'eatigolc') return 'Eatigo restaurants that also match an AMEX Lifestyle Credit dining outlet. Open Eatigo to check the current offer.';
   return 'Results from the selected official merchant source.';
 }
 
