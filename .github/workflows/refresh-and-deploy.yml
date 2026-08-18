@@ -34,7 +34,7 @@ jobs:
           restore-keys: |
             onemap-geocodes-
       - name: Refresh official AMEX merchant sources
-        run: python scripts/refresh_data.py
+        run: python scripts/refresh_data_fixed.py
       - name: Verify OneMap repository secrets
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
