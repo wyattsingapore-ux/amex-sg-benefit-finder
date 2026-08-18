@@ -1,4 +1,4 @@
-name: Refresh AMEX data and deploy Pages
+name: Refresh AMEX + GHA data and deploy Pages
 
 on:
   workflow_dispatch:
@@ -35,6 +35,8 @@ jobs:
             onemap-geocodes-
       - name: Refresh official AMEX merchant sources
         run: python scripts/refresh_data_fixed.py
+      - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
+        run: python scripts/augment_gha.py
       - name: Verify OneMap repository secrets
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
@@ -59,8 +61,6 @@ jobs:
           merchants = payload.get('merchants', [])
           mapped = sum(m.get('lat') is not None and m.get('lng') is not None for m in merchants)
           print(f'Mapped merchants: {mapped}/{len(merchants)}')
-          with open(Path.home() / 'geocode-summary.txt', 'w', encoding='utf-8') as f:
-              f.write(f'Mapped merchants: {mapped}/{len(merchants)}\n')
           if mapped == 0:
               raise SystemExit('Geocoding produced zero mapped merchants; refusing to deploy an empty map.')
           PY
