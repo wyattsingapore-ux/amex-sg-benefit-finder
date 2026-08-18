@@ -1,29 +1,46 @@
-from scripts.augment_eatigo import extract_branch_detail, slot_from_href, same_location, name_score
+from scripts.augment_eatigo import (
+    choose_lc_match,
+    display_name_from_anchor,
+    looks_non_singapore,
+    split_listing_name,
+)
 
 
-def test_eatigo_branch_address_and_postal():
-    html='''<html><body><h1>Peppermint @ PARKROYAL COLLECTION Marina Bay</h1>
-    <section><h2>About</h2><div>6 Raffles Boulevard, Singapore 039594, Singapore</div><div>Copy Address</div></section>
-    </body></html>'''
-    d=extract_branch_detail(html,'Peppermint','https://eatigo.com/en/branches/123')
-    assert d['postal_code']=='039594'
-    assert d['name'].startswith('Peppermint')
+def test_eatigo_listing_name_cleanup():
+    assert display_name_from_anchor('Peppermint @ PARKROYAL COLLECTION Marina Bay 4.7 7.6k reservations') == 'Peppermint @ PARKROYAL COLLECTION Marina Bay'
+    assert split_listing_name('Peppermint @ PARKROYAL COLLECTION Marina Bay') == (
+        'Peppermint', 'PARKROYAL COLLECTION Marina Bay'
+    )
 
 
-def test_eatigo_filters_non_singapore_branch():
-    html='<html><body><h1>Food Exchange</h1><div>Johor Bahru, Malaysia</div><div>Copy Address</div></body></html>'
-    assert extract_branch_detail(html,'Food Exchange','https://eatigo.com/en/branches/123') is None
+def test_eatigo_filters_obvious_johor_listing():
+    assert looks_non_singapore('Fei Fan Hotpot @ Aeon Mall Tebrau City Johor')
+    assert not looks_non_singapore('Lime Restaurant @ PARKROYAL COLLECTION Pickering, Singapore')
 
 
-def test_slot_date_time_discount_from_url():
-    s=slot_from_href('18:30 -50 %','https://eatigo.com/en/branches/123?slot=2026-08-19+18%3A30')
-    assert s=={'date':'2026-08-19','time':'18:30','discount':50}
+def test_eatigo_lc_prefers_matching_branch_qualifier():
+    e = {'name': 'Peppermint @ PARKROYAL COLLECTION Marina Bay'}
+    merchants = [
+        {
+            'name': 'PEPPERMINT', 'brand': 'PARKROYAL COLLECTION MARINA BAY',
+            'address': '6 Raffles Boulevard, Singapore 039594', 'category': 'dining', 'lc': True,
+        },
+        {
+            'name': 'PEPPERMINT', 'brand': 'Example Hotel',
+            'address': '10 Claymore Road, Singapore 229540', 'category': 'dining', 'lc': True,
+        },
+    ]
+    i, note = choose_lc_match(e, merchants, set())
+    assert i == 0
+    assert 'branch' in note
 
 
-def test_eatigo_lc_match_is_location_level():
-    e={'name':'Peppermint @ PARKROYAL COLLECTION Marina Bay','address':'6 Raffles Boulevard, Singapore 039594','postal_code':'039594'}
-    lc={'name':'PEPPERMINT','brand':'PARKROYAL COLLECTION MARINA BAY','address':'6 Raffles Boulevard, Singapore 039594','postal_code':'039594'}
-    wrong={'name':'PEPPERMINT','brand':'Example','address':'10 Claymore Road, Singapore 229540','postal_code':'229540'}
-    assert same_location(e,lc)
-    assert name_score(e,lc)>=0.72
-    assert not same_location(e,wrong)
+def test_eatigo_lc_does_not_guess_between_ambiguous_branches():
+    e = {'name': 'Example Cafe'}
+    merchants = [
+        {'name': 'Example Cafe', 'brand': 'Hotel A', 'address': '1 A Road', 'category': 'dining', 'lc': True},
+        {'name': 'Example Cafe', 'brand': 'Hotel B', 'address': '2 B Road', 'category': 'dining', 'lc': True},
+    ]
+    i, note = choose_lc_match(e, merchants, set())
+    assert i is None
+    assert note is None
