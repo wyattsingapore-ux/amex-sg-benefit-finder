@@ -49,7 +49,7 @@ jobs:
       - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
         run: python -m scripts.augment_gha
       - name: Add full Eatigo Singapore restaurant list (no slot sync)
-        run: python -m scripts.augment_eatigo
+        run: python -m scripts.augment_eatigo_resilient
       - name: Verify OneMap repository secrets
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
