@@ -1,0 +1,97 @@
+name: Deploy UI with last-known-good data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'app.js'
+      - 'index.html'
+      - 'styles.css'
+      - 'scripts/geocode.py'
+      - '.github/workflows/ui-deploy.yml'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-ui
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Restore current live merchant dataset
+        run: |
+          mkdir -p data
+          curl --fail --location --retry 4 --retry-delay 2 \
+            'https://wyattsingapore-ux.github.io/amex-sg-benefit-finder/data/merchants.json' \
+            --output data/merchants.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('data/merchants.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          n = len(d.get('merchants', []))
+          if n == 0:
+              raise SystemExit('Live merchant fallback is empty')
+          print(f'Restored {n} merchants from current live site')
+          PY
+
+      - name: Restore UI geocode metadata cache
+        uses: actions/cache@v4
+        with:
+          path: data/geocodes.json
+          key: ui-geocode-${{ runner.os }}-${{ hashFiles('scripts/geocode.py') }}
+          restore-keys: |
+            ui-geocode-${{ runner.os }}-
+            dining-data-caches-
+            onemap-geocodes-
+
+      - name: Install geocode dependency
+        run: pip install 'requests>=2.32,<3'
+
+      - name: Enrich building, road and postal search metadata with OneMap
+        env:
+          ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
+          ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
+        run: python scripts/geocode.py
+
+      - name: Verify UI dataset
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('data/merchants.json').read_text(encoding='utf-8'))
+          ms = d.get('merchants', [])
+          mapped = sum(m.get('lat') is not None and m.get('lng') is not None for m in ms)
+          enriched = sum(bool(m.get('geocode_building') or m.get('geocode_road')) for m in ms)
+          print(f'UI dataset merchants={len(ms)} mapped={mapped} enriched_search_metadata={enriched}')
+          if not ms:
+              raise SystemExit('No merchant data available for UI deploy')
+          PY
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy UI to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
