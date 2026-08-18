@@ -1,6 +1,7 @@
 const SINGAPORE = [1.3521, 103.8198];
 let payload = { merchants: [], sources: {} };
 let userPos = null;
+let userMarker = null;
 let markers = [];
 
 const map = L.map('map').setView(SINGAPORE, 11.25);
@@ -39,20 +40,71 @@ function modeMatch(m, x) {
   return false;
 }
 
+const SEARCH_ALIASES = {
+  rd: 'road', st: 'street', ave: 'avenue', av: 'avenue', blvd: 'boulevard',
+  ctr: 'centre', center: 'centre', ctre: 'centre', hwy: 'highway', expwy: 'expressway',
+  jln: 'jalan', lor: 'lorong', bt: 'bukit', upp: 'upper', nth: 'north', sth: 'south'
+};
+
+function normalizeSearch(value) {
+  const s = String(value ?? '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+  return s.split(/\s+/).filter(Boolean).map(t => SEARCH_ALIASES[t] || t).join(' ');
+}
+
+function merchantSearchValues(m) {
+  const values = [
+    m.name, m.brand, m.gha_hotel, m.eatigo_location, m.address, m.postal_code,
+    m.geocode_address, m.geocode_building, m.geocode_road, m.geocode_postal,
+    m.hotel, m.mall, m.building, m.property, m.location, m.street, m.venue
+  ];
+
+  // Pick up future source-specific location fields without having to change the UI again.
+  for (const [key, value] of Object.entries(m)) {
+    if ((typeof value === 'string' || typeof value === 'number') &&
+        /(name|brand|address|postal|mall|hotel|building|property|location|street|road|venue|geocode)/i.test(key)) {
+      values.push(value);
+    }
+  }
+  return [...new Set(values.filter(v => v !== null && v !== undefined && String(v).trim()))];
+}
+
+function searchMatch(m, rawQuery) {
+  const raw = String(rawQuery ?? '').trim();
+  if (!raw) return true;
+
+  const values = merchantSearchValues(m);
+  const q = normalizeSearch(raw);
+  const tokens = q.split(/\s+/).filter(Boolean);
+  const index = normalizeSearch(values.join(' '));
+
+  // Postal-code search should work with or without spaces/punctuation.
+  const qDigits = raw.replace(/\D/g, '');
+  if (/^[\d\s#-]+$/.test(raw) && qDigits.length >= 4) {
+    return values.join(' ').replace(/\D/g, '').includes(qDigits);
+  }
+
+  // Token matching allows e.g. "Suntec mall" or "Orchard Rd" even when
+  // the source contains extra words such as "Suntec City Mall" or "Orchard Road".
+  return tokens.every(token => index.includes(token));
+}
+
 function current() {
   const mode = $('benefitFilter').value;
   const cat = $('categoryFilter').value;
-  const q = $('searchBox').value.trim().toLowerCase();
+  const q = $('searchBox').value.trim();
   const bounds = map.getBounds();
 
   let rows = payload.merchants.filter(m =>
     modeMatch(m, mode) && (cat === 'all' || m.category === cat)
   );
 
-  if (q) {
-    rows = rows.filter(m => [m.name, m.brand, m.gha_hotel, m.eatigo_location, m.address, m.postal_code]
-      .filter(Boolean).join(' ').toLowerCase().includes(q));
-  }
+  if (q) rows = rows.filter(m => searchMatch(m, q));
 
   if ($('viewportOnly').checked) {
     rows = rows.filter(m =>
@@ -233,7 +285,20 @@ $('locateBtn').addEventListener('click', () => {
   if (!navigator.geolocation) return alert('Geolocation is not supported by this browser.');
   navigator.geolocation.getCurrentPosition(pos => {
     userPos = [pos.coords.latitude, pos.coords.longitude];
-    L.circleMarker(userPos, { radius: 8, weight: 3, fillOpacity: 1 }).addTo(map).bindPopup('You are here');
+
+    if (userMarker) map.removeLayer(userMarker);
+    const userIcon = L.divIcon({
+      className: '',
+      html: '<div style="width:28px;height:28px;background:#ff3b30;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 8px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center"><div style="width:8px;height:8px;background:#fff;border-radius:50%"></div></div>',
+      iconSize: [34, 42],
+      iconAnchor: [17, 39],
+      popupAnchor: [0, -35]
+    });
+    userMarker = L.marker(userPos, { icon: userIcon, zIndexOffset: 1000 })
+      .addTo(map)
+      .bindPopup('<strong>You are here</strong>')
+      .openPopup();
+
     map.setView(userPos, 14);
     $('sortOrder').value = 'nearest';
     render(false);
