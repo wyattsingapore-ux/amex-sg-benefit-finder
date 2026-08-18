@@ -35,11 +35,35 @@ jobs:
             onemap-geocodes-
       - name: Refresh official AMEX merchant sources
         run: python scripts/refresh_data.py
+      - name: Verify OneMap repository secrets
+        env:
+          ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
+          ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
+        run: |
+          if [ -z "$ONEMAP_API_EMAIL" ] || [ -z "$ONEMAP_API_PASSWORD" ]; then
+            echo "::error::OneMap credentials are not available to the build job. Add ONEMAP_API_EMAIL and ONEMAP_API_PASSWORD under Settings > Secrets and variables > Actions > Repository secrets."
+            exit 1
+          fi
+          echo "OneMap repository secrets are available to the build job."
       - name: Geocode with OneMap
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
           ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
         run: python scripts/geocode.py
+      - name: Verify mapped merchant coordinates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload = json.loads(Path('data/merchants.json').read_text(encoding='utf-8'))
+          merchants = payload.get('merchants', [])
+          mapped = sum(m.get('lat') is not None and m.get('lng') is not None for m in merchants)
+          print(f'Mapped merchants: {mapped}/{len(merchants)}')
+          with open(Path.home() / 'geocode-summary.txt', 'w', encoding='utf-8') as f:
+              f.write(f'Mapped merchants: {mapped}/{len(merchants)}\n')
+          if mapped == 0:
+              raise SystemExit('Geocoding produced zero mapped merchants; refusing to deploy an empty map.')
+          PY
       - run: python scripts/validate_data.py
       - run: python -m pytest -q
       - uses: actions/configure-pages@v5
