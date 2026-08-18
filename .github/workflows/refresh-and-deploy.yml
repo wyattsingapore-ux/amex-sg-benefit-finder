@@ -22,17 +22,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Preserve last-known-good merchant data
+        run: |
+          if [ -f data/merchants.json ]; then
+            cp data/merchants.json "$RUNNER_TEMP/merchants-last-good.json"
+          fi
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
+
       - run: pip install -r requirements.txt
+
       - name: Cache Playwright Chromium
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-      - name: Install Chromium for Eatigo pagination
+
+      - name: Install Chromium for Eatigo pagination (best effort)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -49,8 +59,9 @@ jobs:
               echo '```'
             } > chromium-failure.md
             gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo Chromium setup failure - run $GITHUB_RUN_NUMBER" --body-file chromium-failure.md || true
-            exit "$status"
+            echo "::warning::Chromium setup failed. The site will still deploy using last-known-good merchant data."
           fi
+
       - name: Restore OneMap and Eatigo caches
         uses: actions/cache@v4
         with:
@@ -62,29 +73,56 @@ jobs:
           restore-keys: |
             dining-data-caches-
             onemap-geocodes-
-      - name: Refresh official AMEX merchant sources
-        run: python -m scripts.refresh_data_fixed
-      - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
-        run: python -m scripts.augment_gha
-      - name: Add full Eatigo Singapore restaurant list (no slot sync)
+
+      - name: Refresh merchant data transactionally
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set +e
-          python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-run.log
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "Automated diagnostic from GitHub Actions run $GITHUB_RUN_NUMBER."
-              echo
-              echo '```text'
-              tail -n 220 eatigo-run.log
-              echo '```'
-            } > eatigo-failure.md
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo refresh failure - run $GITHUB_RUN_NUMBER" --body-file eatigo-failure.md || true
-            exit "$status"
+          data_ok=1
+
+          python -m scripts.refresh_data_fixed
+          if [ "$?" -ne 0 ]; then
+            echo "::warning::AMEX refresh failed; reverting to last-known-good merchant data."
+            data_ok=0
           fi
+
+          if [ "$data_ok" -eq 1 ]; then
+            python -m scripts.augment_gha
+            if [ "$?" -ne 0 ]; then
+              echo "::warning::GHA refresh failed; reverting to last-known-good merchant data."
+              data_ok=0
+            fi
+          fi
+
+          if [ "$data_ok" -eq 1 ]; then
+            python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-run.log
+            eatigo_status=${PIPESTATUS[0]}
+            if [ "$eatigo_status" -ne 0 ]; then
+              {
+                echo "Automated diagnostic from GitHub Actions run $GITHUB_RUN_NUMBER."
+                echo
+                echo '```text'
+                tail -n 220 eatigo-run.log
+                echo '```'
+              } > eatigo-failure.md
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo refresh failure - run $GITHUB_RUN_NUMBER" --body-file eatigo-failure.md || true
+              echo "::warning::Eatigo refresh failed; reverting to last-known-good merchant data so UI changes can still deploy."
+              data_ok=0
+            fi
+          fi
+
+          if [ "$data_ok" -ne 1 ]; then
+            if [ -f "$RUNNER_TEMP/merchants-last-good.json" ]; then
+              cp "$RUNNER_TEMP/merchants-last-good.json" data/merchants.json
+              echo "Restored last-known-good data/merchants.json."
+            else
+              echo "::error::No last-known-good merchant dataset is available."
+              exit 1
+            fi
+          fi
+          set -e
+
       - name: Verify OneMap repository secrets
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
@@ -95,11 +133,13 @@ jobs:
             exit 1
           fi
           echo "OneMap repository secrets are available to the build job."
+
       - name: Geocode with OneMap
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
           ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
         run: python scripts/geocode.py
+
       - name: Verify mapped merchant coordinates
         run: |
           python - <<'PY'
@@ -112,6 +152,7 @@ jobs:
           if mapped == 0:
               raise SystemExit('Geocoding produced zero mapped merchants; refusing to deploy an empty map.')
           PY
+
       - run: python scripts/validate_data.py
       - run: python -m pytest -q
       - uses: actions/configure-pages@v5
