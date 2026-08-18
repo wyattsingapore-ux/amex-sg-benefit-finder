@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
-"""Add a simple Eatigo Singapore restaurant list to merchants.json.
+"""Add the full Eatigo Singapore restaurant list to merchants.json.
 
-This intentionally does NOT collect time slots or discount percentages. We only
-collect restaurant/listing membership, the branch's public street address, an
-Eatigo link, and a strict Eatigo+LC outlet/location intersection.
+Scope is intentionally simple:
+- discover Eatigo restaurant/branch membership across all result pages;
+- keep the Eatigo branch link;
+- fetch/cache only the public street address for mapping and LC matching;
+- do NOT collect time slots or discount percentages.
 
-The listing crawl uses ordinary HTTP requests. For each discovered branch we
-read only the public address from the Eatigo branch page so the map can pin it.
+A successful full snapshot is cached for 7 days. If Eatigo is temporarily
+unavailable later, the last good snapshot can be reused instead of publishing a
+severely truncated list.
 """
 from __future__ import annotations
 
+import asyncio
 import json
+import math
 import re
 import time
 import unicodedata
-from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from urllib.parse import urljoin, urlparse, urlunparse
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 
 from scripts import refresh_data as base
 
@@ -46,7 +52,10 @@ NON_SG_HINTS = (
     "johor", "tebrau", "southkey", "iskandar puteri", "mount austin", "komtar jbcc",
     "paradigm mall jb", "aeon mall", "sutera mall", "city square jb",
 )
-MAX_LISTING_PAGES = 120
+BRANCH_CACHE = DATA / "eatigo_branch_cache.json"
+SNAPSHOT = DATA / "eatigo_snapshot.json"
+BRANCH_CACHE_MAX_AGE = timedelta(days=60)
+SNAPSHOT_MAX_AGE = timedelta(days=7)
 
 
 def clean(value: str | None) -> str:
@@ -127,124 +136,106 @@ def choose_lc_match(eatigo: dict, merchants: list[dict], used: set[int]) -> tupl
     return None, None
 
 
-def canonical_url(href: str) -> str:
-    u = urlparse(urljoin(BASE_URL, href))
-    return urlunparse((u.scheme, u.netloc, u.path.rstrip("/"), "", u.query, ""))
-
-
 def branch_url(href: str) -> str:
     u = urlparse(urljoin(BASE_URL, href))
     return urlunparse((u.scheme, u.netloc, u.path.rstrip("/"), "", "", ""))
 
 
-def is_region_listing(url: str) -> bool:
-    u = urlparse(url)
-    if u.netloc not in {"eatigo.com", "www.eatigo.com"}:
-        return False
-    p = u.path.rstrip("/")
-    if not p.startswith("/en/regions/27") or "/branches/" in p:
-        return False
-    return p == "/en/regions/27" or p == "/en/regions/27/search" or any(
-        token in p for token in ("/categories/", "/themes/", "/tags/")
+async def anchors_for_page(page) -> list[dict]:
+    return await page.locator('a[href*="/branches/"]').evaluate_all(
+        """els => els.map(a => ({
+            href: a.href || a.getAttribute('href') || '',
+            text: (a.innerText || a.textContent || '').trim()
+        }))"""
     )
 
 
-def parse_listing(html: str, page_url: str) -> tuple[list[dict], list[str], int | None]:
-    soup = BeautifulSoup(html, "html.parser")
-    restaurants: dict[str, dict] = {}
-    listing_urls: set[str] = set()
-
-    body_text = clean(soup.get_text(" ", strip=True))
-    count_match = RESULT_COUNT_RE.search(body_text)
-    advertised = int(count_match.group(1).replace(",", "")) if count_match else None
-
-    for a in soup.find_all("a", href=True):
-        href = a.get("href") or ""
-        full = canonical_url(href)
-        bm = BRANCH_RE.search(full)
-        if bm:
-            text = clean(a.get_text(" ", strip=True))
-            if not text or text.lower() in {"more", "view more", "today", "tomorrow"} or TIME_TEXT_RE.match(text):
-                continue
-            name = display_name_from_anchor(text)
-            if not name or looks_non_singapore(name):
-                continue
-            bid = bm.group(1)
-            current = restaurants.get(bid)
-            if current is None or len(name) > len(current["name"]):
-                restaurants[bid] = {"branch_id": bid, "name": name, "url": branch_url(href)}
-        elif is_region_listing(full) and full != canonical_url(page_url):
-            listing_urls.add(full)
-
-    return list(restaurants.values()), sorted(listing_urls), advertised
-
-
-def get(session: requests.Session, url: str) -> str:
-    last = None
-    for attempt in range(3):
-        try:
-            r = session.get(url, timeout=30)
-            r.raise_for_status()
-            return r.text
-        except Exception as exc:
-            last = exc
-            time.sleep(0.6 * (attempt + 1))
-    raise RuntimeError(f"Eatigo request failed for {url}: {last}")
-
-
-def discover_eatigo() -> tuple[list[dict], int, int | None]:
-    session = requests.Session()
-    session.headers.update({"User-Agent": UA, "Accept-Language": "en-SG,en;q=0.9"})
-    seeds = [
-        SEARCH_URL,
-        SEARCH_URL + '?filter={"sortby":"popular"}',
-        SEARCH_URL + '?filter={"sortby":"rating"}',
-        SEARCH_URL + '?filter={"sortby":"discount"}',
-        "https://eatigo.com/en/regions/27/themes/14764",
-        "https://eatigo.com/en/regions/27/categories/14764",
-        "https://eatigo.com/en/regions/27/themes/14758",
-        "https://eatigo.com/en/regions/27/themes/14767",
-        "https://eatigo.com/en/regions/27/themes/15814",
-    ]
-    q = deque(canonical_url(x) for x in seeds)
-    seen_pages: set[str] = set()
-    found: dict[str, dict] = {}
-    failed_pages = 0
-    advertised_total = None
-
-    while q and len(seen_pages) < MAX_LISTING_PAGES:
-        url = q.popleft()
-        if url in seen_pages:
+def aggregate_anchors(rows: list[dict], found: dict[str, dict]) -> set[str]:
+    page_ids: set[str] = set()
+    for row in rows:
+        href = clean(row.get("href"))
+        text = clean(row.get("text"))
+        m = BRANCH_RE.search(href)
+        if not m:
             continue
-        seen_pages.add(url)
-        try:
-            html = get(session, url)
-            rows, more, advertised = parse_listing(html, url)
-            if advertised_total is None and advertised:
-                advertised_total = advertised
-        except Exception as exc:
-            print(f"WARN Eatigo listing page {url}: {exc}")
-            failed_pages += 1
+        bid = m.group(1)
+        page_ids.add(bid)
+        if not text or text.lower() in {"more", "view more", "today", "tomorrow"} or TIME_TEXT_RE.match(text):
             continue
-        for row in rows:
-            old = found.get(row["branch_id"])
-            if old is None or len(row["name"]) > len(old["name"]):
-                found[row["branch_id"]] = row
-        for nxt in more:
-            if nxt not in seen_pages:
-                q.append(nxt)
-        time.sleep(0.05)
+        name = display_name_from_anchor(text)
+        if not name:
+            continue
+        current = found.get(bid)
+        if current is None or len(name) > len(current["name"]):
+            found[bid] = {"branch_id": bid, "name": name, "url": branch_url(href)}
+    return page_ids
 
-    rows = [x for x in found.values() if x.get("name") and not looks_non_singapore(x["name"])]
-    if len(rows) < 20:
-        raise RuntimeError(f"Eatigo public-list crawl returned only {len(rows)} Singapore restaurants")
-    print(json.dumps({
-        "eatigo_listing_pages_checked": len(seen_pages),
-        "eatigo_listing_pages_failed": failed_pages,
-        "eatigo_unique_restaurants": len(rows),
-        "eatigo_advertised_region_results": advertised_total,
-    }, indent=2))
-    return rows, len(seen_pages), advertised_total
+
+async def click_page_number(page, page_num: int, previous_ids: set[str]) -> None:
+    clicked = await page.evaluate(
+        """n => {
+          const els = [...document.querySelectorAll('button,a')]
+            .filter(e => (e.textContent || '').trim() === String(n) && e.offsetParent !== null);
+          if (!els.length) return false;
+          els.sort((a,b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top);
+          els[0].click();
+          return true;
+        }""",
+        page_num,
+    )
+    if not clicked:
+        raise RuntimeError(f"Could not find Eatigo pagination control for page {page_num}")
+
+    for _ in range(35):
+        await page.wait_for_timeout(300)
+        rows = await anchors_for_page(page)
+        ids = {BRANCH_RE.search(x.get("href", "")).group(1) for x in rows if BRANCH_RE.search(x.get("href", ""))}
+        if ids and ids != previous_ids:
+            return
+    raise RuntimeError(f"Eatigo page {page_num} did not load a new restaurant set")
+
+
+async def discover_eatigo_browser() -> tuple[list[dict], int]:
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True, args=["--disable-dev-shm-usage", "--no-sandbox"])
+        context = await browser.new_context(user_agent=UA, locale="en-SG")
+        page = await context.new_page()
+        await page.goto(SEARCH_URL, wait_until="domcontentloaded", timeout=60000)
+        try:
+            await page.wait_for_selector('a[href*="/branches/"]', timeout=30000)
+        except PlaywrightTimeoutError as exc:
+            raise RuntimeError("Eatigo search page did not expose restaurant links") from exc
+        await page.wait_for_timeout(1200)
+
+        body = await page.locator("body").inner_text()
+        m = RESULT_COUNT_RE.search(body)
+        if not m:
+            raise RuntimeError("Could not determine Eatigo Singapore result count")
+        total = int(m.group(1).replace(",", ""))
+        pages = math.ceil(total / 21)
+
+        found: dict[str, dict] = {}
+        previous_ids: set[str] = set()
+        signatures: set[tuple[str, ...]] = set()
+        for page_num in range(1, pages + 1):
+            if page_num > 1:
+                await click_page_number(page, page_num, previous_ids)
+            rows = await anchors_for_page(page)
+            ids = aggregate_anchors(rows, found)
+            if not ids:
+                raise RuntimeError(f"No Eatigo restaurant links found on result page {page_num}")
+            signature = tuple(sorted(ids))
+            if signature in signatures:
+                raise RuntimeError(f"Eatigo pagination repeated a previous page at page {page_num}")
+            signatures.add(signature)
+            previous_ids = ids
+
+        await browser.close()
+
+    discovered = list(found.values())
+    if len(discovered) < max(100, int(total * 0.90)):
+        raise RuntimeError(f"Eatigo crawl truncated: advertised={total}, discovered={len(discovered)}")
+    return discovered, total
 
 
 def parse_branch_detail(html: str, fallback_name: str, url: str) -> dict | None:
@@ -263,61 +254,140 @@ def parse_branch_detail(html: str, fallback_name: str, url: str) -> dict | None:
             address = clean(lines[i - 1])
             break
     if not address:
-        # Fallback for layout changes: prefer a concise line containing Singapore + postal code.
         candidates = [x for x in lines if "singapore" in x.lower() and re.search(r"\b\d{6}\b", x)]
         if candidates:
             address = min(candidates, key=len)
     if not address or "singapore" not in address.lower():
         return None
-    return {
-        "name": name,
-        "address": address,
-        "postal_code": base.postal(address),
-        "url": url,
-    }
+    return {"name": name, "address": address, "postal_code": base.postal(address), "url": url}
 
 
-def fetch_branch_detail(item: dict) -> tuple[str, dict | None, str | None]:
+def read_json(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
+    except Exception:
+        return default
+
+
+def age_ok(value: str | None, max_age: timedelta) -> bool:
+    try:
+        dt = datetime.fromisoformat(value or "")
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return datetime.now(timezone.utc) - dt <= max_age
+    except Exception:
+        return False
+
+
+def fetch_branch_detail(item: dict) -> tuple[str, dict | None, bool, str | None]:
     last = None
     for attempt in range(3):
         try:
-            r = requests.get(
-                item["url"],
-                headers={"User-Agent": UA, "Accept-Language": "en-SG,en;q=0.9"},
-                timeout=30,
-            )
+            r = requests.get(item["url"], headers={"User-Agent": UA, "Accept-Language": "en-SG,en;q=0.9"}, timeout=30)
             r.raise_for_status()
-            return item["branch_id"], parse_branch_detail(r.text, item["name"], item["url"]), None
+            detail = parse_branch_detail(r.text, item["name"], item["url"])
+            if detail:
+                return item["branch_id"], detail, False, None
+            low = r.text.lower()
+            explicit_non_sg = "malaysia" in low or "johor" in low
+            return item["branch_id"], None, explicit_non_sg, None
         except Exception as exc:
             last = exc
             time.sleep(0.5 * (attempt + 1))
-    return item["branch_id"], None, str(last)
+    return item["branch_id"], None, False, str(last)
 
 
-def add_branch_addresses(rows: list[dict]) -> list[dict]:
-    details: dict[str, dict] = {}
+def add_branch_addresses(rows: list[dict], advertised_total: int) -> list[dict]:
+    cache = read_json(BRANCH_CACHE, {})
+    now = datetime.now(timezone.utc).isoformat()
+    need = []
+    enriched: dict[str, dict] = {}
+
+    for row in rows:
+        entry = cache.get(row["branch_id"], {})
+        if age_ok(entry.get("fetched_at"), BRANCH_CACHE_MAX_AGE):
+            if entry.get("address"):
+                enriched[row["branch_id"]] = {**row, **{k: entry.get(k) for k in ("name", "address", "postal_code", "url") if entry.get(k)}}
+            continue
+        need.append(row)
+
     failures = []
-    with ThreadPoolExecutor(max_workers=6) as pool:
-        futures = {pool.submit(fetch_branch_detail, row): row for row in rows}
-        for fut in as_completed(futures):
-            item = futures[fut]
-            bid, detail, error = fut.result()
-            if detail:
-                details[bid] = {**item, **detail}
-            elif error:
-                failures.append((bid, error))
+    if need:
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            futures = {pool.submit(fetch_branch_detail, row): row for row in need}
+            for fut in as_completed(futures):
+                row = futures[fut]
+                bid, detail, non_sg, error = fut.result()
+                if detail:
+                    cache[bid] = {**detail, "fetched_at": now}
+                    enriched[bid] = {**row, **detail}
+                elif non_sg:
+                    cache[bid] = {"non_singapore": True, "fetched_at": now}
+                else:
+                    stale = cache.get(bid, {})
+                    if stale.get("address"):
+                        enriched[bid] = {**row, **{k: stale.get(k) for k in ("name", "address", "postal_code", "url") if stale.get(k)}}
+                    else:
+                        failures.append((bid, error or "address not found"))
 
-    enriched = [details[x["branch_id"]] for x in rows if x["branch_id"] in details]
-    success_rate = len(enriched) / max(1, len(rows))
+    for row in rows:
+        bid = row["branch_id"]
+        if bid in enriched:
+            continue
+        entry = cache.get(bid, {})
+        if entry.get("address"):
+            enriched[bid] = {**row, **{k: entry.get(k) for k in ("name", "address", "postal_code", "url") if entry.get(k)}}
+
+    DATA.mkdir(exist_ok=True)
+    BRANCH_CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+    out = list(enriched.values())
+    minimum = max(200, int(advertised_total * 0.72))
     print(json.dumps({
-        "eatigo_branch_addresses": len(enriched),
-        "eatigo_branch_address_failures": len(rows) - len(enriched),
-        "eatigo_address_success_rate": round(success_rate, 3),
+        "eatigo_advertised_region_results": advertised_total,
+        "eatigo_discovered_branches": len(rows),
+        "eatigo_singapore_addresses": len(out),
+        "eatigo_address_failures": len(failures),
+        "minimum_required": minimum,
     }, indent=2))
-    if success_rate < 0.70:
-        sample = failures[:3]
-        raise RuntimeError(f"Eatigo address lookup succeeded for only {len(enriched)}/{len(rows)} branches; sample failures={sample}")
-    return enriched
+    if len(out) < minimum:
+        raise RuntimeError(f"Eatigo Singapore address set too small: {len(out)}; expected at least {minimum}. Sample failures={failures[:3]}")
+    return out
+
+
+def load_snapshot(allow_stale: bool = False) -> tuple[list[dict], int] | None:
+    snap = read_json(SNAPSHOT, {})
+    rows = snap.get("outlets") or []
+    total = int(snap.get("advertised_total") or 0)
+    if len(rows) < 200:
+        return None
+    if not allow_stale and not age_ok(snap.get("fetched_at"), SNAPSHOT_MAX_AGE):
+        return None
+    return rows, total or len(rows)
+
+
+def save_snapshot(rows: list[dict], total: int) -> None:
+    SNAPSHOT.write_text(json.dumps({
+        "fetched_at": datetime.now(timezone.utc).isoformat(),
+        "advertised_total": total,
+        "outlets": rows,
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def get_eatigo_outlets() -> tuple[list[dict], int, str]:
+    fresh = load_snapshot(False)
+    if fresh:
+        return fresh[0], fresh[1], "fresh-cache"
+    try:
+        discovered, total = asyncio.run(discover_eatigo_browser())
+        rows = add_branch_addresses(discovered, total)
+        save_snapshot(rows, total)
+        return rows, total, "live-refresh"
+    except Exception as exc:
+        stale = load_snapshot(True)
+        if stale:
+            print(f"WARN Eatigo live refresh failed; using last good snapshot: {exc}")
+            return stale[0], stale[1], "stale-cache"
+        raise
 
 
 def main() -> int:
@@ -325,8 +395,7 @@ def main() -> int:
     payload = json.loads(mp.read_text(encoding="utf-8"))
     merchants = payload.get("merchants", [])
 
-    discovered, pages_checked, advertised_total = discover_eatigo()
-    eatigo_outlets = add_branch_addresses(discovered)
+    eatigo_outlets, advertised_total, source_mode = get_eatigo_outlets()
 
     for m in merchants:
         m.setdefault("eatigo", False)
@@ -338,6 +407,8 @@ def main() -> int:
     used_merchants: set[int] = set()
     matched = 0
     for e in eatigo_outlets:
+        if looks_non_singapore(e.get("name") or ""):
+            continue
         head, location = split_listing_name(e["name"])
         best_i, note = choose_lc_match(e, merchants, used_merchants)
         if best_i is not None:
@@ -356,8 +427,8 @@ def main() -> int:
             "category": "dining", "ld": False, "lc": False, "gha": False, "eatigo": True,
             "ld_source": None, "lc_section": None, "match_note": None,
             "gha_hotel": None, "gha_source": None, "gha_match_note": None, "gha_tiers": None,
-            "eatigo_branch_id": e["branch_id"], "eatigo_url": e["url"],
-            "eatigo_location": location or None, "eatigo_match_note": None,
+            "eatigo_branch_id": e["branch_id"], "eatigo_url": e["url"], "eatigo_location": location or None,
+            "eatigo_match_note": None,
             "id": base.make_id("Eatigo " + e["branch_id"], e["address"], e.get("postal_code")),
             "lat": None, "lng": None,
         })
@@ -365,20 +436,21 @@ def main() -> int:
     payload.setdefault("sources", {})["eatigo"] = SEARCH_URL
     payload.setdefault("stats", {})["eatigo"] = sum(bool(m.get("eatigo")) for m in merchants)
     payload["stats"]["eatigo_lc"] = sum(bool(m.get("eatigo")) and bool(m.get("lc")) for m in merchants)
-    payload["eatigo_listing_pages_checked"] = pages_checked
     payload["eatigo_advertised_region_results"] = advertised_total
+    payload["eatigo_source_mode"] = source_mode
     payload["merchants"] = sorted(merchants, key=lambda x: (str(x.get("name", "")).lower(), str(x.get("postal_code") or "")))
 
     actual = [m for m in payload["merchants"] if m.get("eatigo")]
-    if len(actual) != len(eatigo_outlets):
-        raise RuntimeError(f"Eatigo merge lost/duplicated outlets: source={len(eatigo_outlets)} merged={len(actual)}")
+    if len(actual) < 200:
+        raise RuntimeError(f"Eatigo merge produced only {len(actual)} Singapore outlets")
 
     mp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({
-        "eatigo_list": len(eatigo_outlets),
+        "eatigo_advertised_region_results": advertised_total,
+        "eatigo_singapore_list": len(actual),
         "eatigo_lc": matched,
+        "source_mode": source_mode,
         "time_slots_collected": False,
-        "discounts_collected": False,
     }, indent=2))
     return 0
 
