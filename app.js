@@ -121,7 +121,7 @@ function updateNotice(rows) {
   }
   if (mode === 'eatigo' && rows.length && markers.length < rows.length) {
     banner.classList.remove('hidden');
-    banner.innerHTML = `<strong>${rows.length} Eatigo restaurants found.</strong> Eatigo List is list-first; only outlets with a verified address from another benefit source are pinned precisely on the map.`;
+    banner.innerHTML = `<strong>${markers.length} of ${rows.length} Eatigo restaurants are mapped.</strong> Any unmapped outlet is still shown in the list below.`;
     return;
   }
   if (rows.length && markers.length === 0) {
@@ -143,7 +143,7 @@ function listHintForMode(mode) {
   if (mode === 'gha') return 'Singapore outlets on the official Pan Pacific DISCOVERY participating restaurant list.';
   if (mode === 'ghalc') return 'GHA dining outlets that also match an AMEX Lifestyle Credit outlet at the same location.';
   if (mode === 'eatigo') return 'Restaurants listed on Eatigo Singapore. Open Eatigo to check the current discount and booking time.';
-  if (mode === 'eatigolc') return 'Eatigo restaurants that also match an AMEX Lifestyle Credit dining outlet. Open Eatigo to check the current offer.';
+  if (mode === 'eatigolc') return 'Eatigo restaurants that also match an AMEX Lifestyle Credit dining outlet at the same location. Open Eatigo to check the current offer.';
   return 'Results from the selected official merchant source.';
 }
 
