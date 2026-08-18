@@ -27,9 +27,6 @@ DATA = ROOT / "data"
 GHA_URL = "https://www.panpacific.com/en/dining/pphg-fb.html"
 UA = "Mozilla/5.0 (compatible; AmexSGBenefitFinder/1.0)"
 
-# Stable property locations. Restaurant-level unit numbers are not published on
-# the master participating-outlets page, so the hotel/property address is used
-# for mapping and outlet-level location matching.
 HOTELS = {
     "pan pacific orchard": ("Pan Pacific Orchard", "10 Claymore Road, Singapore 229540"),
     "pan pacific singapore": ("Pan Pacific Singapore", "7 Raffles Boulevard, Singapore 039595"),
@@ -39,16 +36,8 @@ HOTELS = {
     "top of uob plaza": ("TOP of UOB Plaza", "80 Raffles Place, #60-01 UOB Plaza 1, Singapore 048624"),
 }
 
-GHA_TIERS = {
-    "silver": 10,
-    "gold": 15,
-    "platinum": 20,
-    "titanium": 25,
-}
-
-GENERIC_NAME_WORDS = {
-    "the", "and", "restaurant", "restaurants", "bar", "bars", "lounge", "cafe", "café",
-}
+GHA_TIERS = {"silver": 10, "gold": 15, "platinum": 20, "titanium": 25}
+GENERIC_NAME_WORDS = {"the", "and", "restaurant", "restaurants", "bar", "bars", "lounge", "cafe", "café"}
 
 
 def clean(value: str | None) -> str:
@@ -68,8 +57,7 @@ def name_key(value: str | None) -> str:
 
 
 def canonical_hotel(line: str):
-    k = key_text(line)
-    return HOTELS.get(k)
+    return HOTELS.get(key_text(line))
 
 
 def parse_gha_singapore(html: bytes | str) -> list[dict]:
@@ -78,19 +66,26 @@ def parse_gha_singapore(html: bytes | str) -> list[dict]:
         tag.decompose()
     lines = [clean(x) for x in soup.stripped_strings if clean(x)]
 
-    starts = [i for i, x in enumerate(lines) if x == "SINGAPORE"]
-    if not starts:
-        raise RuntimeError("Could not find SINGAPORE section in Pan Pacific dining source")
-    start = starts[-1]
-    end = next((i for i in range(start + 1, len(lines)) if lines[i] == "THAILAND"), None)
-    if end is None:
-        raise RuntimeError("Could not find end of SINGAPORE section in Pan Pacific dining source")
+    # The site contains other country selectors/navigation. Pick the SINGAPORE
+    # block that is actually followed by one of the known participating hotel
+    # headings and terminates at THAILAND.
+    section: list[str] | None = None
+    for start in [i for i, x in enumerate(lines) if x == "SINGAPORE"]:
+        end = next((i for i in range(start + 1, len(lines)) if lines[i] == "THAILAND"), None)
+        if end is None:
+            continue
+        candidate = lines[start + 1:end]
+        if any(canonical_hotel(x) for x in candidate):
+            section = candidate
+            break
+    if section is None:
+        raise RuntimeError("Could not identify the Singapore participating-restaurant section")
 
     current_hotel: tuple[str, str] | None = None
     outlets: list[dict] = []
     seen: set[tuple[str, str]] = set()
 
-    for raw in lines[start + 1:end]:
+    for raw in section:
         line = clean(raw)
         if not line or line == "|":
             continue
@@ -107,16 +102,8 @@ def parse_gha_singapore(html: bytes | str) -> list[dict]:
         if not key[0] or key in seen:
             continue
         seen.add(key)
-        outlets.append({
-            "name": line,
-            "hotel": hotel,
-            "address": address,
-            "postal_code": pc,
-        })
+        outlets.append({"name": line, "hotel": hotel, "address": address, "postal_code": pc})
 
-    # The current official Singapore list has 17 outlets. Use a range rather
-    # than hard-coding 17 so legitimate additions/removals can flow through,
-    # while still failing loudly if the page structure changes.
     if not 10 <= len(outlets) <= 40:
         raise RuntimeError(f"Unexpected Singapore GHA outlet count: {len(outlets)}")
     return outlets
@@ -186,24 +173,14 @@ def main() -> int:
             matched += 1
         else:
             merchants.append({
-                "name": g["name"],
-                "brand": g["hotel"],
-                "address": g["address"],
-                "postal_code": g["postal_code"],
-                "category": "dining",
-                "ld": False,
-                "lc": False,
-                "gha": True,
-                "ld_source": None,
-                "lc_section": None,
-                "match_note": None,
-                "gha_hotel": g["hotel"],
-                "gha_source": GHA_URL,
-                "gha_match_note": None,
-                "gha_tiers": GHA_TIERS,
+                "name": g["name"], "brand": g["hotel"], "address": g["address"],
+                "postal_code": g["postal_code"], "category": "dining",
+                "ld": False, "lc": False, "gha": True,
+                "ld_source": None, "lc_section": None, "match_note": None,
+                "gha_hotel": g["hotel"], "gha_source": GHA_URL,
+                "gha_match_note": None, "gha_tiers": GHA_TIERS,
                 "id": base.make_id("GHA " + g["name"], g["address"], g["postal_code"]),
-                "lat": None,
-                "lng": None,
+                "lat": None, "lng": None,
             })
 
     payload.setdefault("sources", {})["gha_dining"] = GHA_URL
@@ -214,8 +191,6 @@ def main() -> int:
         key=lambda x: (str(x.get("name", "")).lower(), str(x.get("postal_code") or ""), str(x.get("address", "")).lower()),
     )
 
-    # Strong source-integrity check: every source outlet must survive exactly
-    # once in the merged data, regardless of whether it matched LC.
     actual_gha = [m for m in payload["merchants"] if m.get("gha")]
     if len(actual_gha) != len(gha_outlets):
         raise RuntimeError(f"GHA merge lost or duplicated outlets: source={len(gha_outlets)} merged={len(actual_gha)}")
