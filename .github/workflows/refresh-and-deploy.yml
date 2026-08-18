@@ -26,23 +26,21 @@ jobs:
           python-version: '3.12'
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Install Chromium for Eatigo crawl
-        run: python -m playwright install --with-deps chromium
-      - name: Restore geocode and Eatigo branch caches
+      - name: Check system Chrome for lightweight Eatigo list crawl
+        run: |
+          which google-chrome || which google-chrome-stable || which chromium || which chromium-browser
+      - name: Restore OneMap geocode cache
         uses: actions/cache@v4
         with:
-          path: |
-            data/geocodes.json
-            data/eatigo_branch_cache.json
-          key: dining-caches-${{ github.run_id }}
+          path: data/geocodes.json
+          key: onemap-geocodes-${{ github.run_id }}
           restore-keys: |
-            dining-caches-
             onemap-geocodes-
       - name: Refresh official AMEX merchant sources
         run: python -m scripts.refresh_data_fixed
       - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
         run: python -m scripts.augment_gha
-      - name: Add current Eatigo Singapore restaurants and slots
+      - name: Add Eatigo Singapore restaurant list (no time-slot sync)
         run: python -m scripts.augment_eatigo
       - name: Verify OneMap repository secrets
         env:
