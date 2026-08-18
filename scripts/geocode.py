@@ -58,8 +58,15 @@ def main():
             try:
                 choice=choose(search(query,tok),m.get('postal_code'))
                 if choice:
-                    hit={'lat':float(choice['LATITUDE']),'lng':float(choice.get('LONGITUDE') or choice.get('LONGTITUDE')),
-                         'matched_address':choice.get('ADDRESS'),'postal':choice.get('POSTAL'),'query':query}
+                    hit={
+                        'lat':float(choice['LATITUDE']),
+                        'lng':float(choice.get('LONGITUDE') or choice.get('LONGTITUDE')),
+                        'matched_address':choice.get('ADDRESS'),
+                        'postal':choice.get('POSTAL'),
+                        'building':choice.get('BUILDING'),
+                        'road_name':choice.get('ROAD_NAME'),
+                        'query':query,
+                    }
                     cache[key]=hit; new+=1
                 else: failed+=1
             except Exception as e:
@@ -67,6 +74,13 @@ def main():
             time.sleep(.12)
         if hit:
             m['lat']=hit.get('lat'); m['lng']=hit.get('lng')
+            # Keep OneMap's resolved address metadata in the generated dataset so
+            # front-end search can find malls/buildings/streets even when the
+            # original merchant source only supplied a postal code or terse address.
+            if hit.get('matched_address'): m['geocode_address']=hit.get('matched_address')
+            if hit.get('postal'): m['geocode_postal']=hit.get('postal')
+            if hit.get('building'): m['geocode_building']=hit.get('building')
+            if hit.get('road_name'): m['geocode_road']=hit.get('road_name')
     cp.write_text(json.dumps(cache,ensure_ascii=False,indent=2),encoding='utf-8')
     mp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
     mapped=sum(m.get('lat') is not None and m.get('lng') is not None for m in payload['merchants'])
