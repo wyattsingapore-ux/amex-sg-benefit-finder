@@ -71,7 +71,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set +e
-          python -m scripts.augment_eatigo_resilient 2>&1 | tee eatigo-run.log
+          python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-run.log
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
