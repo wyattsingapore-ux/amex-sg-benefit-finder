@@ -6,9 +6,9 @@ An independent static map/search app for Singapore dining and lifestyle benefits
 - **Lifestyle Credit (LC)** — uses the current AMEX Platinum Credit Card Fashion & Dining Credit participating-merchant PDF.
 - **Both (LD + LC)** — strict outlet/location-level intersection.
 - **GHA List** — Singapore Pan Pacific Hotels Group operated restaurants and bars participating in Pan Pacific DISCOVERY dining savings.
-- **GHA + LC** — GHA dining outlets that also match an AMEX Lifestyle Credit outlet at the same location.
-- **Eatigo List** — current Singapore restaurants discovered from Eatigo, including visible date/time discount slots.
-- **Eatigo + LC** — Eatigo restaurants that also match an AMEX Lifestyle Credit outlet at the same location.
+- **GHA + LC** — GHA dining outlets that also match an AMEX Lifestyle Credit outlet.
+- **Eatigo List** — restaurants currently listed in Eatigo's Singapore search, with a direct Eatigo link.
+- **Eatigo + LC** — Eatigo listings that can be matched safely to an AMEX Lifestyle Credit dining outlet.
 
 ## Data sources
 
@@ -19,15 +19,21 @@ An independent static map/search app for Singapore dining and lifestyle benefits
 - Pan Pacific DISCOVERY benefit details: https://www.panpacific.com/en/panpacific-discovery/benefits.html
 - Eatigo Singapore restaurant search: https://eatigo.com/en/regions/27/search
 
-The GitHub Actions job refreshes all sources daily immediately before deployment.
+The GitHub Actions job refreshes the source lists daily before deployment.
 
-## Eatigo
+## Eatigo — deliberately simple
 
-Eatigo is dynamic rather than a static merchant list. The build crawls the current Singapore result pages, stores branch IDs and current visible date/time discount slots, fetches/caches each branch address, filters out nearby non-Singapore results, and calculates `Eatigo + LC` at outlet + location level.
+The Eatigo integration is intentionally **list-only**. It does **not** collect, store or synchronize Eatigo time slots or discount percentages.
 
-Branch address details are cached for 30 days to avoid repeatedly requesting every Eatigo restaurant page. Time-slot discounts are refreshed every daily build.
+The build only crawls Eatigo's paginated Singapore search result pages to capture:
 
-`Eatigo + LC` means the same restaurant/outlet currently appears in Eatigo and the AMEX LC merchant list. It is an eligibility intersection, **not a guarantee that every transaction will stack**. Eatigo's own restaurant conditions/terms can restrict combination with other promotions; verify the current restaurant conditions and AMEX LC eligibility before spending.
+- restaurant / outlet name;
+- Eatigo branch ID and direct Eatigo URL;
+- branch/property text already present in the listing name, when available.
+
+For `Eatigo + LC`, the build compares the Eatigo restaurant name against AMEX LC dining entries. A branch/property qualifier such as `@ PARKROYAL COLLECTION Marina Bay` is used when available. If multiple LC branches have the same restaurant name and the branch cannot be resolved confidently, the matcher deliberately leaves it out rather than guessing.
+
+Eatigo-only entries are list-first and are not given invented precise map coordinates. Open Eatigo from the restaurant card to check current availability, booking times and discounts.
 
 ## Pan Pacific DISCOVERY / GHA dining
 
@@ -40,7 +46,7 @@ Current published dining savings by Pan Pacific DISCOVERY status:
 - Platinum — 20%
 - Titanium — 25%
 
-The programme terms apply, including exclusions and restrictions on combining the dining saving with other discounts/promotions. `GHA + LC` identifies location-level candidates where the restaurant is also on the AMEX LC list.
+The programme terms apply. `GHA + LC` identifies location-level candidates where the restaurant is also on the AMEX LC list.
 
 ## OneMap geocoding
 
@@ -51,7 +57,7 @@ ONEMAP_API_EMAIL=your OneMap account email
 ONEMAP_API_PASSWORD=your OneMap account password
 ```
 
-`geocode.py` authenticates only at build time, caches coordinates in `data/geocodes.json`, and never writes credentials into the website.
+`geocode.py` authenticates only at build time, caches verified coordinates in `data/geocodes.json`, and skips approximate Eatigo-only location labels.
 
 ## GitHub Pages deployment
 
@@ -61,16 +67,16 @@ ONEMAP_API_PASSWORD=your OneMap account password
 
 ## Matching rules
 
-Intersections are calculated at **outlet + location level**. A brand is not marked as overlapping merely because different branches participate in different programmes. Matching first requires the same postal code (or a strong normalized-address match), then sufficiently similar outlet names.
+AMEX LD+LC and GHA+LC use outlet/location-level matching. Eatigo+LC uses conservative restaurant-name + branch/property matching because the simple Eatigo list intentionally does not open every restaurant detail page for full addresses.
 
-The pipelines include source-count and merge-integrity checks so a page/PDF redesign or pagination failure causes the build to fail rather than silently publish a severely truncated list.
+The pipelines include source-count and merge-integrity checks so a source redesign or pagination failure does not silently publish a severely truncated list.
 
 ## Main files
 
 - `index.html`, `styles.css`, `app.js` — static UI/map.
 - `scripts/refresh_data.py` / `scripts/refresh_data_fixed.py` — AMEX LD + LC extraction.
 - `scripts/augment_gha.py` — GHA/Pan Pacific dining extraction and GHA+LC intersection.
-- `scripts/augment_eatigo.py` — Eatigo pagination crawl, time slots, branch cache and Eatigo+LC intersection.
+- `scripts/augment_eatigo.py` — lightweight Eatigo restaurant-list crawl and Eatigo+LC matching.
 - `scripts/geocode.py` — OneMap authentication/geocoding and cache.
 - `scripts/validate_data.py` — data invariants.
 - `.github/workflows/refresh-and-deploy.yml` — daily refresh + GitHub Pages deployment.
