@@ -29,7 +29,12 @@ function km(a, b) {
 }
 
 function modeMatch(m, x) {
-  return x === 'ld' ? m.ld : x === 'lc' ? m.lc : m.ld && m.lc;
+  if (x === 'ld') return !!m.ld;
+  if (x === 'lc') return !!m.lc;
+  if (x === 'both') return !!m.ld && !!m.lc;
+  if (x === 'gha') return !!m.gha;
+  if (x === 'ghalc') return !!m.gha && !!m.lc;
+  return false;
 }
 
 function current() {
@@ -43,7 +48,7 @@ function current() {
   );
 
   if (q) {
-    rows = rows.filter(m => [m.name, m.brand, m.address, m.postal_code]
+    rows = rows.filter(m => [m.name, m.brand, m.gha_hotel, m.address, m.postal_code]
       .filter(Boolean)
       .join(' ')
       .toLowerCase()
@@ -75,11 +80,32 @@ function current() {
 }
 
 function badges(m) {
-  const benefit = m.ld && m.lc
-    ? '<span class="badge both">LD + LC</span>'
-    : (m.ld ? '<span class="badge ld">LOVE DINING</span>' : '') +
-      (m.lc ? '<span class="badge lc">LIFESTYLE CREDIT</span>' : '');
-  return benefit + `<span class="badge cat">${esc(m.category.toUpperCase())}</span>`;
+  const out = [];
+  if (m.ld && m.lc) out.push('<span class="badge both">LD + LC</span>');
+  else {
+    if (m.ld) out.push('<span class="badge ld">LOVE DINING</span>');
+    if (m.lc && !m.gha) out.push('<span class="badge lc">LIFESTYLE CREDIT</span>');
+  }
+
+  if (m.gha && m.lc) out.push('<span class="badge ghalc">GHA + LC</span>');
+  else if (m.gha) out.push('<span class="badge gha">GHA DINING</span>');
+
+  out.push(`<span class="badge cat">${esc(m.category.toUpperCase())}</span>`);
+  return out.join('');
+}
+
+function ghaTierNote(m) {
+  if (!m.gha) return '';
+  const t = m.gha_tiers || { silver: 10, gold: 15, platinum: 20, titanium: 25 };
+  return `<div class="gha-note"><strong>DISCOVERY dining:</strong> Silver ${t.silver}% · Gold ${t.gold}% · Platinum ${t.platinum}% · Titanium ${t.titanium}%</div>`;
+}
+
+function benefitText(m) {
+  const b = [];
+  if (m.ld) b.push('Love Dining');
+  if (m.lc) b.push('Lifestyle Credit');
+  if (m.gha) b.push('GHA / Pan Pacific DISCOVERY');
+  return b.join(' + ');
 }
 
 function updateNotice(rows) {
@@ -109,6 +135,13 @@ function updateNotice(rows) {
   banner.textContent = '';
 }
 
+function listHintForMode(mode) {
+  if (mode === 'both') return 'Only outlets matched in both official AMEX sources at the same location.';
+  if (mode === 'gha') return 'Singapore outlets on the official Pan Pacific DISCOVERY participating restaurant list.';
+  if (mode === 'ghalc') return 'GHA dining outlets that also match an AMEX Lifestyle Credit outlet at the same location.';
+  return 'Results from the selected official merchant source.';
+}
+
 function render(fit = false) {
   const rows = current();
   layer.clearLayers();
@@ -122,7 +155,7 @@ function render(fit = false) {
       fillOpacity: .88
     }).bindPopup(
       `<strong>${esc(m.name)}</strong><br>${esc(m.address)}<br>` +
-      `<small>${m.ld && m.lc ? 'LD + LC' : m.ld ? 'Love Dining' : 'Lifestyle Credit'}</small>`
+      `<small>${esc(benefitText(m))}</small>`
     );
     mk.addTo(layer);
     markers.push(mk);
@@ -130,9 +163,7 @@ function render(fit = false) {
 
   $('resultCount').textContent = rows.length;
   $('mappedCount').textContent = markers.length;
-  $('listHint').textContent = $('benefitFilter').value === 'both'
-    ? 'Only outlets matched in both official merchant sources at the same location.'
-    : 'Results from the selected official merchant source.';
+  $('listHint').textContent = listHintForMode($('benefitFilter').value);
 
   $('merchantList').innerHTML = rows.length
     ? rows.map(m => {
@@ -144,6 +175,7 @@ function render(fit = false) {
           <div class="badges">${badges(m)}</div>
           <div><h3>${esc(m.name)}</h3>${brand}</div>
           <div class="address">${esc(m.address)}</div>
+          ${ghaTierNote(m)}
           <div class="merchant-actions">
             <a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${q}">Open in Maps ↗</a>
             <span class="distance">${m._distance != null ? m._distance.toFixed(1) + ' km' : ''}</span>
@@ -174,6 +206,7 @@ async function load() {
     $('ldHotelsSource').href = payload.sources.love_dining_hotels || '#';
     $('ldRestaurantsSource').href = payload.sources.love_dining_restaurants || '#';
     $('lcSource').href = payload.sources.lifestyle_credit_pdf || '#';
+    $('ghaSource').href = payload.sources.gha_dining || 'https://www.panpacific.com/en/dining/pphg-fb.html';
 
     if (payload.bootstrap_lc_only) $('benefitFilter').value = 'lc';
     render(true);
@@ -185,7 +218,9 @@ async function load() {
 }
 
 $('benefitFilter').addEventListener('change', () => {
-  if ($('benefitFilter').value !== 'lc') $('categoryFilter').value = 'all';
+  const mode = $('benefitFilter').value;
+  if (mode === 'gha' || mode === 'ghalc') $('categoryFilter').value = 'dining';
+  else if (mode !== 'lc') $('categoryFilter').value = 'all';
   render(true);
 });
 $('categoryFilter').addEventListener('change', () => render(true));
