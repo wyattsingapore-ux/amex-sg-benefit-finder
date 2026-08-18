@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Singapore Dining Benefit Finder — AMEX & GHA</title>
-  <meta name="description" content="Unofficial searchable map for Singapore AMEX Love Dining, Lifestyle Credit and Pan Pacific DISCOVERY/GHA dining benefits.">
+  <title>Singapore Dining Benefit Finder — AMEX, GHA & Eatigo</title>
+  <meta name="description" content="Unofficial searchable map for Singapore AMEX Love Dining, Lifestyle Credit, Pan Pacific DISCOVERY/GHA and Eatigo dining benefits.">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header class="hero">
   <div><div class="eyebrow">UNOFFICIAL COMMUNITY TOOL</div><h1>Singapore Dining Benefit Finder</h1>
-    <p>Find <strong>Love Dining</strong>, <strong>Lifestyle Credit</strong>, <strong>GHA / Pan Pacific DISCOVERY</strong>, and useful intersections.</p></div>
+    <p>Find <strong>Love Dining</strong>, <strong>Lifestyle Credit</strong>, <strong>GHA / Pan Pacific DISCOVERY</strong>, <strong>Eatigo</strong>, and useful intersections.</p></div>
   <div class="updated" id="updated">Loading merchant data…</div>
 </header>
 <main>
@@ -21,9 +21,11 @@
       <option value="both" selected>Both — LD + Lifestyle Credit</option>
       <option value="gha">GHA List</option>
       <option value="ghalc">GHA + LC</option>
+      <option value="eatigo">Eatigo List</option>
+      <option value="eatigolc">Eatigo + LC</option>
     </select></div>
     <div class="control"><label for="categoryFilter">Category</label><select id="categoryFilter"><option value="all">All</option><option value="dining">Dining</option><option value="fashion">Fashion</option></select></div>
-    <div class="control grow"><label for="searchBox">Merchant, hotel, mall, street or postal code</label><div class="search-row"><input id="searchBox" type="search" placeholder="e.g. Prego, Lime, ION Orchard, 238801"><button id="findBtn">Find</button></div></div>
+    <div class="control grow"><label for="searchBox">Merchant, hotel, mall, street or postal code</label><div class="search-row"><input id="searchBox" type="search" placeholder="e.g. Prego, Lime, Peppermint, 238801"><button id="findBtn">Find</button></div></div>
     <button id="locateBtn" class="secondary">◎ Use my location</button>
   </section>
   <section class="stats" aria-live="polite"><div><strong id="resultCount">0</strong><span>matching outlets</span></div><div><strong id="mappedCount">0</strong><span>shown on map</span></div><label class="viewport-toggle"><input id="viewportOnly" type="checkbox"> Show only current map view</label></section>
@@ -32,7 +34,7 @@
   <section class="list-head"><div><h2>Merchants</h2><p id="listHint">Select a benefit or search above.</p></div><div class="sort-box"><label for="sortOrder">Sort</label><select id="sortOrder"><option value="az">A–Z</option><option value="nearest">Nearest</option></select></div></section>
   <section id="merchantList" class="merchant-list"></section>
 </main>
-<footer><p>This is an unofficial finder and is not affiliated with American Express, GHA DISCOVERY or Pan Pacific Hotels Group. Eligibility, participating outlets and terms can change; verify with the programme before spending.</p>
-<p><a id="ldHotelsSource" target="_blank" rel="noopener">Love Dining Hotels</a> · <a id="ldRestaurantsSource" target="_blank" rel="noopener">Love Dining Restaurants</a> · <a id="lcSource" target="_blank" rel="noopener">Lifestyle Credit merchant PDF</a> · <a id="ghaSource" target="_blank" rel="noopener">GHA / Pan Pacific participating restaurants</a></p></footer>
+<footer><p>This is an unofficial finder and is not affiliated with American Express, GHA DISCOVERY, Pan Pacific Hotels Group or Eatigo. Eligibility, discounts, participating outlets and terms can change; verify with the relevant programme before spending.</p>
+<p><a id="ldHotelsSource" target="_blank" rel="noopener">Love Dining Hotels</a> · <a id="ldRestaurantsSource" target="_blank" rel="noopener">Love Dining Restaurants</a> · <a id="lcSource" target="_blank" rel="noopener">Lifestyle Credit merchant PDF</a> · <a id="ghaSource" target="_blank" rel="noopener">GHA / Pan Pacific participating restaurants</a> · <a id="eatigoSource" target="_blank" rel="noopener">Eatigo Singapore restaurants</a></p></footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script><script src="app.js"></script>
 </body></html>
