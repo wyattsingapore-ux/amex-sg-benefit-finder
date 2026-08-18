@@ -11,6 +11,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
   group: pages
@@ -49,7 +50,24 @@ jobs:
       - name: Add official GHA / Pan Pacific DISCOVERY dining outlets
         run: python -m scripts.augment_gha
       - name: Add full Eatigo Singapore restaurant list (no slot sync)
-        run: python -m scripts.augment_eatigo_resilient
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python -m scripts.augment_eatigo_resilient 2>&1 | tee eatigo-run.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "Automated diagnostic from GitHub Actions run $GITHUB_RUN_NUMBER."
+              echo
+              echo '```text'
+              tail -n 220 eatigo-run.log
+              echo '```'
+            } > eatigo-failure.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo refresh failure - run $GITHUB_RUN_NUMBER" --body-file eatigo-failure.md || true
+            exit "$status"
+          fi
       - name: Verify OneMap repository secrets
         env:
           ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
