@@ -41,7 +41,7 @@ jobs:
           ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
         run: python scripts/geocode.py
       - run: python scripts/validate_data.py
-      - run: pytest -q
+      - run: python -m pytest -q
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
