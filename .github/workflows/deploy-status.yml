@@ -1,0 +1,41 @@
+name: Report production deployment status
+
+on:
+  workflow_run:
+    workflows: ["Refresh dining data and deploy Pages"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update persistent production status issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+        run: |
+          checked="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+          {
+            echo "## Latest production deployment"
+            echo
+            echo "- Result: **${CONCLUSION}**"
+            echo "- Main commit: \`${HEAD_SHA}\`"
+            echo "- Workflow run: ${RUN_NUMBER}"
+            echo "- Checked (UTC): ${checked}"
+            echo "- Run: ${RUN_URL}"
+            echo
+            if [ "${CONCLUSION}" = "success" ]; then
+              echo "The full production build, validation, GitHub Pages upload and deploy job completed successfully."
+            else
+              echo "The production workflow did not complete successfully. Inspect the linked run before treating the public site as current."
+            fi
+          } > /tmp/deploy-status.md
+          gh issue edit 14 --repo "$GITHUB_REPOSITORY" --title "Production deployment status — ${CONCLUSION}" --body-file /tmp/deploy-status.md
