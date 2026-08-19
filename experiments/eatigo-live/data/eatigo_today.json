@@ -1,0 +1,1757 @@
+{
+  "experiment": "eatigo-live-discounts-v1",
+  "date_sg": "2026-08-19",
+  "fetched_at": "2026-08-19T15:10:07.800385+08:00",
+  "source": "Eatigo branch pages (ordinary HTTP; no Playwright)",
+  "restaurants_attempted": 30,
+  "restaurants_with_future_slots": 30,
+  "restaurants_with_50pct_or_better": 20,
+  "restaurants": [
+    {
+      "id": "a0c0e1fc2f42d1",
+      "name": "11PenangLane Bistro @ Ji Hotel Orchard Singapore",
+      "branch_id": "3372947146027",
+      "eatigo_url": "https://eatigo.com/en/branches/3372947146027",
+      "address": "11 Penang Ln (Ji Hotel Orchard Singapore), Singapore 238485, Singapore",
+      "postal_code": "238485",
+      "lat": 1.29770847350941,
+      "lng": 103.844472777114,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 50
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 20
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 10
+        },
+        {
+          "time": "20:30",
+          "discount": 10
+        },
+        {
+          "time": "21:00",
+          "discount": 10
+        },
+        {
+          "time": "21:30",
+          "discount": 20
+        },
+        {
+          "time": "22:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "44b75c8d3632dd",
+      "name": "1864, Sofitel Singapore City Centre",
+      "branch_id": "3375252725990",
+      "eatigo_url": "https://eatigo.com/en/branches/3375252725990",
+      "address": "9 Wallich St, #5th Floor Sofitel Singapore City Centre, Singapore 078885, Singapore",
+      "postal_code": "078885",
+      "lat": 1.27679992796433,
+      "lng": 103.845618295657,
+      "lc": false,
+      "slots": [
+        {
+          "time": "16:30",
+          "discount": 10
+        },
+        {
+          "time": "17:00",
+          "discount": 10
+        },
+        {
+          "time": "17:30",
+          "discount": 10
+        },
+        {
+          "time": "18:00",
+          "discount": 10
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 10
+        },
+        {
+          "time": "20:30",
+          "discount": 10
+        },
+        {
+          "time": "21:00",
+          "discount": 10
+        },
+        {
+          "time": "21:30",
+          "discount": 10
+        }
+      ],
+      "best_today": 10,
+      "error": null
+    },
+    {
+      "id": "0efd7282038b2f",
+      "name": "21 on Rajah @ Aloft by Marriott Singapore Novena",
+      "branch_id": "3393914365248",
+      "eatigo_url": "https://eatigo.com/en/branches/3393914365248",
+      "address": "1 Jalan Rajah, Aloft by Marriott Singapore Novena, East Wing, Singapore 329133, Singapore, Singapore",
+      "postal_code": "329133",
+      "lat": 1.32699075133711,
+      "lng": 103.847403697576,
+      "lc": false,
+      "slots": [
+        {
+          "time": "18:00",
+          "discount": 30
+        },
+        {
+          "time": "18:30",
+          "discount": 30
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 40
+        },
+        {
+          "time": "20:30",
+          "discount": 40
+        },
+        {
+          "time": "21:00",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "f2ed277d6eb64c",
+      "name": "2Gather @ Suntec City",
+      "branch_id": "3394517306894",
+      "eatigo_url": "https://eatigo.com/en/branches/3394517306894",
+      "address": "3 Temasek Blvd, #01-505 Suntec Tower 2, Singapore 038983, Singapore",
+      "postal_code": "038983",
+      "lat": 1.29593189477195,
+      "lng": 103.859014406736,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 30
+        },
+        {
+          "time": "16:00",
+          "discount": 30
+        },
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 30
+        },
+        {
+          "time": "17:30",
+          "discount": 30
+        },
+        {
+          "time": "18:00",
+          "discount": 50
+        },
+        {
+          "time": "18:30",
+          "discount": 50
+        },
+        {
+          "time": "19:00",
+          "discount": 30
+        },
+        {
+          "time": "19:30",
+          "discount": 30
+        },
+        {
+          "time": "20:00",
+          "discount": 30
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "1adc2ad988a864",
+      "name": "2SCOOPS [NeWest @ Clementi] Gelato, Waffles, SAKE",
+      "branch_id": "3382105750916",
+      "eatigo_url": "https://eatigo.com/en/branches/3382105750916",
+      "address": "1 W Coast Dr, #01-94 NEWest, Singapore 128020, Singapore",
+      "postal_code": "128020",
+      "lat": 1.31641321892509,
+      "lng": 103.757451263299,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 20
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 10
+        },
+        {
+          "time": "20:30",
+          "discount": 10
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        },
+        {
+          "time": "21:30",
+          "discount": 20
+        },
+        {
+          "time": "22:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 20,
+      "error": null
+    },
+    {
+      "id": "a891c8ffa9afbf",
+      "name": "5:59+ CAFE & BISTRO @ Orchard",
+      "branch_id": "3395309666834",
+      "eatigo_url": "https://eatigo.com/en/branches/3395309666834",
+      "address": "313 Orchard Rd, #01-28, Singapore 238895, Singapore",
+      "postal_code": "238895",
+      "lat": 1.30101436404056,
+      "lng": 103.838360664485,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 30
+        },
+        {
+          "time": "16:00",
+          "discount": 40
+        },
+        {
+          "time": "16:30",
+          "discount": 40
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 10
+        },
+        {
+          "time": "18:00",
+          "discount": 10
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 30
+        }
+      ],
+      "best_today": 40,
+      "error": null
+    },
+    {
+      "id": "2616a43dab01e6",
+      "name": "81 Thai Kitchen@ Beach Road (Bugis)",
+      "branch_id": "3395639404986",
+      "eatigo_url": "https://eatigo.com/en/branches/3395639404986",
+      "address": "371 Beach Rd, #02-03 City Gate, Singapore 199597, Singapore",
+      "postal_code": "199597",
+      "lat": 1.30231590504573,
+      "lng": 103.862331661034,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 50
+        },
+        {
+          "time": "16:00",
+          "discount": 30
+        },
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 30
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "6ecd62569f9770",
+      "name": "90 Minutes (BBQ and Army Stew Buffet) @ Punggol Coast Mall",
+      "branch_id": "3389900075542",
+      "eatigo_url": "https://eatigo.com/en/branches/3389900075542",
+      "address": "98 Punggol Wy, #01-230 Punggol Coast Mall, Singapore 829857, Singapore",
+      "postal_code": "829857",
+      "lat": 1.41470557625612,
+      "lng": 103.912635422712,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 20
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 20,
+      "error": null
+    },
+    {
+      "id": "beb6071e092ec8",
+      "name": "90 Minutes - Korean Tteokbokki Hotpot Buffet @ Bras Basah",
+      "branch_id": "3373021859960",
+      "eatigo_url": "https://eatigo.com/en/branches/3373021859960",
+      "address": "9 Bras Basah Rd, Rendezvous Hotel, #01-01, Singapore 189559, Singapore",
+      "postal_code": "189559",
+      "lat": 1.29858300811483,
+      "lng": 103.849316124707,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 20
+        },
+        {
+          "time": "17:00",
+          "discount": 50
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "eefc94be9ed347",
+      "name": "Abu Mubarak Mandi Rice Restaurant @ North Bridge Road",
+      "branch_id": "3383996880424",
+      "eatigo_url": "https://eatigo.com/en/branches/3383996880424",
+      "address": "737 N Bridge Rd, Singapore 198705, Singapore",
+      "postal_code": "198705",
+      "lat": 1.30309150706248,
+      "lng": 103.858920996368,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 30
+        },
+        {
+          "time": "17:30",
+          "discount": 10
+        },
+        {
+          "time": "18:00",
+          "discount": 10
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 30,
+      "error": null
+    },
+    {
+      "id": "27cfb219dd0964",
+      "name": "Abu Mubarak Mandi Rice Restaurant @ Tampines",
+      "branch_id": "3383990344362",
+      "eatigo_url": "https://eatigo.com/en/branches/3383990344362",
+      "address": "300 Tampines Ave 5, Singapore 529653, Singapore",
+      "postal_code": "529653",
+      "lat": 1.3523360160745,
+      "lng": 103.941943293971,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 30
+        },
+        {
+          "time": "17:30",
+          "discount": 10
+        },
+        {
+          "time": "18:00",
+          "discount": 10
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 30,
+      "error": null
+    },
+    {
+      "id": "551ed57fa613d5",
+      "name": "Aburiya Yakiniku @ Robertson Quay",
+      "branch_id": "3393407361885",
+      "eatigo_url": "https://eatigo.com/en/branches/3393407361885",
+      "address": "60 Robertson Quay, #01-03 The Quayside Singapore 238252, Singapore",
+      "postal_code": "238252",
+      "lat": 1.29008339576408,
+      "lng": 103.839199219609,
+      "lc": false,
+      "slots": [
+        {
+          "time": "17:00",
+          "discount": 50
+        },
+        {
+          "time": "17:30",
+          "discount": 30
+        },
+        {
+          "time": "18:00",
+          "discount": 15
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 10
+        },
+        {
+          "time": "20:30",
+          "discount": 30
+        },
+        {
+          "time": "21:00",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "00e2c1ac081e16",
+      "name": "Allora Bar @ Crowne Plaza Changi Airport",
+      "branch_id": "3379061595849",
+      "eatigo_url": "https://eatigo.com/en/branches/3379061595849",
+      "address": "75 Airport Blvd., Terminal 3 Singapore Changi Airport, Singapore 819664, Singapore",
+      "postal_code": "819664",
+      "lat": 1.35872080296023,
+      "lng": 103.98796702598,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 35
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "ba087d3cdf4b4c",
+      "name": "Allora Garden @ Crowne Plaza Changi Airport",
+      "branch_id": "3379058326282",
+      "eatigo_url": "https://eatigo.com/en/branches/3379058326282",
+      "address": "75 Airport Blvd., Terminal 3 Singapore Changi Airport, Singapore 819664, Singapore",
+      "postal_code": "819664",
+      "lat": 1.35872080296023,
+      "lng": 103.98796702598,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 35
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "c63f45585c3a5e",
+      "name": "Allora Ristorante & Bar @ Crowne Plaza Changi Airport",
+      "branch_id": "3371849411324",
+      "eatigo_url": "https://eatigo.com/en/branches/3371849411324",
+      "address": "75 Airport Blvd., #01-01, Singapore 819664, Singapore",
+      "postal_code": "819664",
+      "lat": 1.35872080296023,
+      "lng": 103.98796702598,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 35
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "c77d2d97ffbb02",
+      "name": "Anglo Indian Café & Bar @ 1 Shenton Way",
+      "branch_id": "3370402581147",
+      "eatigo_url": "https://eatigo.com/en/branches/3370402581147",
+      "address": "1 Shenton Way, #01-08, One Shenton, Singapore 068803, Singapore",
+      "postal_code": "068803",
+      "lat": 1.27929478959373,
+      "lng": 103.850552555075,
+      "lc": false,
+      "slots": [
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 50
+        },
+        {
+          "time": "17:30",
+          "discount": 50
+        },
+        {
+          "time": "18:00",
+          "discount": 25
+        },
+        {
+          "time": "19:00",
+          "discount": 25
+        },
+        {
+          "time": "19:30",
+          "discount": 25
+        },
+        {
+          "time": "20:00",
+          "discount": 25
+        },
+        {
+          "time": "20:30",
+          "discount": 25
+        },
+        {
+          "time": "21:00",
+          "discount": 25
+        },
+        {
+          "time": "21:30",
+          "discount": 25
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "f6c47db152ba73",
+      "name": "Anglo Indian Café & Bar @ Chijmes",
+      "branch_id": "3369988135252",
+      "eatigo_url": "https://eatigo.com/en/branches/3369988135252",
+      "address": "30 Victoria Street, #01-13, Chijmes Singapore 187996, Singapore",
+      "postal_code": "187996",
+      "lat": 1.29479670956332,
+      "lng": 103.852573366033,
+      "lc": false,
+      "slots": [
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 30
+        },
+        {
+          "time": "17:30",
+          "discount": 30
+        },
+        {
+          "time": "18:00",
+          "discount": 25
+        },
+        {
+          "time": "18:30",
+          "discount": 25
+        },
+        {
+          "time": "19:00",
+          "discount": 25
+        },
+        {
+          "time": "19:30",
+          "discount": 25
+        },
+        {
+          "time": "20:00",
+          "discount": 25
+        },
+        {
+          "time": "20:30",
+          "discount": 25
+        },
+        {
+          "time": "21:00",
+          "discount": 25
+        },
+        {
+          "time": "21:30",
+          "discount": 25
+        }
+      ],
+      "best_today": 30,
+      "error": null
+    },
+    {
+      "id": "a2d598efba9ea8",
+      "name": "Anglo Indian Café & Bar @ Marina One",
+      "branch_id": "3373714699949",
+      "eatigo_url": "https://eatigo.com/en/branches/3373714699949",
+      "address": "5 Straits View, #01-10 Marina One The Heart, Singapore 018935., Singapore",
+      "postal_code": "018935",
+      "lat": 1.27737235072298,
+      "lng": 103.852844801266,
+      "lc": false,
+      "slots": [
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 50
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "7d6f759356ad7c",
+      "name": "Apollo @ Furama Riverfront",
+      "branch_id": "3383747186085",
+      "eatigo_url": "https://eatigo.com/en/branches/3383747186085",
+      "address": "405 Havelock Road, Level 3, Singapore 169633, Singapore",
+      "postal_code": "169633",
+      "lat": 1.28769285607795,
+      "lng": 103.836160045113,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 30
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 15
+        },
+        {
+          "time": "18:30",
+          "discount": 15
+        },
+        {
+          "time": "19:00",
+          "discount": 15
+        },
+        {
+          "time": "19:30",
+          "discount": 15
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 20
+        },
+        {
+          "time": "21:00",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "6510a7b5965f88",
+      "name": "Atithi Kitchen @ Farrer Park",
+      "branch_id": "3393908124935",
+      "eatigo_url": "https://eatigo.com/en/branches/3393908124935",
+      "address": "72 Syed Alwi Road, OPP Mustafa Exit 6, Singapore 207651, Singapore",
+      "postal_code": "207651",
+      "lat": 1.3086368168156,
+      "lng": 103.85648676002,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 20
+        },
+        {
+          "time": "18:00",
+          "discount": 20
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        },
+        {
+          "time": "20:30",
+          "discount": 10
+        },
+        {
+          "time": "21:00",
+          "discount": 10
+        },
+        {
+          "time": "21:30",
+          "discount": 10
+        },
+        {
+          "time": "22:00",
+          "discount": 10
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "6ec223f094789d",
+      "name": "Atrium Restaurant @ Holiday Inn Singapore Atrium",
+      "branch_id": "3370420235493",
+      "eatigo_url": "https://eatigo.com/en/branches/3370420235493",
+      "address": "Holiday Inn® Singapore Atrium, 317 Outram Road, Level 4, Singapore 169075, Singapore",
+      "postal_code": "169075",
+      "lat": 1.28896723470825,
+      "lng": 103.834188484711,
+      "lc": false,
+      "slots": [
+        {
+          "time": "18:00",
+          "discount": 50
+        },
+        {
+          "time": "18:30",
+          "discount": 50
+        },
+        {
+          "time": "19:00",
+          "discount": 50
+        },
+        {
+          "time": "19:30",
+          "discount": 50
+        },
+        {
+          "time": "20:00",
+          "discount": 50
+        },
+        {
+          "time": "20:30",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "70719f06aa7fb9",
+      "name": "Avenue'J Cafe @ School of The Arts (SOTA) Dhoby Ghaut",
+      "branch_id": "3395241919928",
+      "eatigo_url": "https://eatigo.com/en/branches/3395241919928",
+      "address": "1 Zubir Said Dr, #01-01, Singapore 227968, Singapore",
+      "postal_code": "227968",
+      "lat": 1.29936480411316,
+      "lng": 103.848687419363,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 50
+        },
+        {
+          "time": "16:00",
+          "discount": 30
+        },
+        {
+          "time": "16:30",
+          "discount": 30
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 15
+        },
+        {
+          "time": "18:00",
+          "discount": 15
+        },
+        {
+          "time": "18:30",
+          "discount": 15
+        },
+        {
+          "time": "19:00",
+          "discount": 20
+        },
+        {
+          "time": "19:30",
+          "discount": 20
+        },
+        {
+          "time": "20:00",
+          "discount": 20
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "06cf960f9f6693",
+      "name": "Bamboo King’s Briyani Restaurant @ Kitchener Road",
+      "branch_id": "3393263727095",
+      "eatigo_url": "https://eatigo.com/en/branches/3393263727095",
+      "address": "157 Kitchener Rd, Singapore 208529, Singapore",
+      "postal_code": "208529",
+      "lat": 1.31004654427584,
+      "lng": 103.856687778864,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 50
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 50
+        },
+        {
+          "time": "17:30",
+          "discount": 50
+        },
+        {
+          "time": "18:00",
+          "discount": 50
+        },
+        {
+          "time": "18:30",
+          "discount": 50
+        },
+        {
+          "time": "19:00",
+          "discount": 50
+        },
+        {
+          "time": "19:30",
+          "discount": 50
+        },
+        {
+          "time": "20:00",
+          "discount": 50
+        },
+        {
+          "time": "20:30",
+          "discount": 50
+        },
+        {
+          "time": "21:00",
+          "discount": 50
+        },
+        {
+          "time": "21:30",
+          "discount": 50
+        },
+        {
+          "time": "22:00",
+          "discount": 50
+        },
+        {
+          "time": "22:30",
+          "discount": 50
+        },
+        {
+          "time": "23:00",
+          "discount": 50
+        },
+        {
+          "time": "23:30",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "ce244276c5d518",
+      "name": "Banjara Fine Dining Restaurant @ Changi Business Park",
+      "branch_id": "3373295945752",
+      "eatigo_url": "https://eatigo.com/en/branches/3373295945752",
+      "address": "6 Changi Business Park Ave 1, North Tower, #01-32 ESR Bizpark @ Changi, opposite to Park Avenue Changi hotel, Singapore 486017Singapore, Singapore",
+      "postal_code": "486017",
+      "lat": 1.33535677709911,
+      "lng": 103.963892243026,
+      "lc": false,
+      "slots": [
+        {
+          "time": "17:30",
+          "discount": 50
+        },
+        {
+          "time": "18:00",
+          "discount": 10
+        },
+        {
+          "time": "18:30",
+          "discount": 10
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 10
+        },
+        {
+          "time": "20:30",
+          "discount": 10
+        },
+        {
+          "time": "21:00",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "43025c2418f3d2",
+      "name": "Bar Intermezzo @ Orchard Hotel",
+      "branch_id": "3373209793722",
+      "eatigo_url": "https://eatigo.com/en/branches/3373209793722",
+      "address": "442 Orchard Rd, Singapore 238879, Level 1, Orchard Hotel Singapore, Singapore",
+      "postal_code": "238879",
+      "lat": 1.30744253289071,
+      "lng": 103.828776671636,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 20
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 20
+        },
+        {
+          "time": "17:00",
+          "discount": 20
+        },
+        {
+          "time": "17:30",
+          "discount": 35
+        },
+        {
+          "time": "18:00",
+          "discount": 35
+        },
+        {
+          "time": "18:30",
+          "discount": 35
+        },
+        {
+          "time": "19:00",
+          "discount": 35
+        },
+        {
+          "time": "19:30",
+          "discount": 35
+        },
+        {
+          "time": "20:00",
+          "discount": 35
+        },
+        {
+          "time": "20:30",
+          "discount": 35
+        }
+      ],
+      "best_today": 35,
+      "error": null
+    },
+    {
+      "id": "18987f5f8716b0",
+      "name": "Bar-beque @ Prinsep Street",
+      "branch_id": "3376918840201",
+      "eatigo_url": "https://eatigo.com/en/branches/3376918840201",
+      "address": "46 Prinsep St, #01-01/#02-01, Singapore 188675, Singapore",
+      "postal_code": "188675",
+      "lat": 1.29953466307853,
+      "lng": 103.849728550018,
+      "lc": false,
+      "slots": [
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 40
+        },
+        {
+          "time": "17:30",
+          "discount": 40
+        },
+        {
+          "time": "18:00",
+          "discount": 30
+        },
+        {
+          "time": "18:30",
+          "discount": 30
+        },
+        {
+          "time": "19:00",
+          "discount": 30
+        },
+        {
+          "time": "19:30",
+          "discount": 30
+        },
+        {
+          "time": "20:00",
+          "discount": 30
+        },
+        {
+          "time": "20:30",
+          "discount": 30
+        },
+        {
+          "time": "21:00",
+          "discount": 30
+        },
+        {
+          "time": "21:30",
+          "discount": 30
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "34e96f35b5b677",
+      "name": "BARtistry@ONE22- Mercure Singapore Bugis",
+      "branch_id": "3380443518298",
+      "eatigo_url": "https://eatigo.com/en/branches/3380443518298",
+      "address": "122 Middle Road, Level 1, Singapore 188973, Singapore",
+      "postal_code": "188973",
+      "lat": 1.29960950187876,
+      "lng": 103.853118508952,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 50
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 50
+        },
+        {
+          "time": "17:30",
+          "discount": 40
+        },
+        {
+          "time": "18:00",
+          "discount": 40
+        },
+        {
+          "time": "18:30",
+          "discount": 40
+        },
+        {
+          "time": "19:00",
+          "discount": 30
+        },
+        {
+          "time": "19:30",
+          "discount": 30
+        },
+        {
+          "time": "20:00",
+          "discount": 30
+        },
+        {
+          "time": "20:30",
+          "discount": 30
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "297f1b20ff66d6",
+      "name": "BBQ Box @ East Coast",
+      "branch_id": "3375095883956",
+      "eatigo_url": "https://eatigo.com/en/branches/3375095883956",
+      "address": "195 East Coast Road, Singapore 428900, Singapore., Singapore",
+      "postal_code": "428900",
+      "lat": 1.30724452858823,
+      "lng": 103.90646113261,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 10
+        },
+        {
+          "time": "16:00",
+          "discount": 20
+        },
+        {
+          "time": "16:30",
+          "discount": 20
+        }
+      ],
+      "best_today": 20,
+      "error": null
+    },
+    {
+      "id": "c35c3febccaac0",
+      "name": "Bee Cheng Hiang Grillery @ Serangoon",
+      "branch_id": "3374313326573",
+      "eatigo_url": "https://eatigo.com/en/branches/3374313326573",
+      "address": "1359 Serangoon Road S328241, Singapore",
+      "postal_code": "328241",
+      "lat": 1.32701333234404,
+      "lng": 103.867100437227,
+      "lc": false,
+      "slots": [
+        {
+          "time": "15:30",
+          "discount": 50
+        },
+        {
+          "time": "16:00",
+          "discount": 50
+        },
+        {
+          "time": "16:30",
+          "discount": 50
+        },
+        {
+          "time": "17:00",
+          "discount": 30
+        },
+        {
+          "time": "17:30",
+          "discount": 30
+        },
+        {
+          "time": "18:00",
+          "discount": 30
+        },
+        {
+          "time": "18:30",
+          "discount": 30
+        },
+        {
+          "time": "19:00",
+          "discount": 30
+        },
+        {
+          "time": "19:30",
+          "discount": 30
+        },
+        {
+          "time": "20:00",
+          "discount": 50
+        },
+        {
+          "time": "20:30",
+          "discount": 50
+        }
+      ],
+      "best_today": 50,
+      "error": null
+    },
+    {
+      "id": "dc4849243ed6c8",
+      "name": "Beirut Grill @ Bussorah Street Bugis",
+      "branch_id": "3394864001787",
+      "eatigo_url": "https://eatigo.com/en/branches/3394864001787",
+      "address": "72 Bussorah St, Singapore 199485, Singapore",
+      "postal_code": "199485",
+      "lat": 1.30081474072147,
+      "lng": 103.859957452243,
+      "lc": false,
+      "slots": [
+        {
+          "time": "17:30",
+          "discount": 30
+        },
+        {
+          "time": "18:00",
+          "discount": 30
+        },
+        {
+          "time": "18:30",
+          "discount": 20
+        },
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
+        {
+          "time": "20:00",
+          "discount": 10
+        },
+        {
+          "time": "20:30",
+          "discount": 10
+        },
+        {
+          "time": "21:00",
+          "discount": 20
+        },
+        {
+          "time": "21:30",
+          "discount": 20
+        }
+      ],
+      "best_today": 30,
+      "error": null
+    }
+  ]
+}
