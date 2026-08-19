@@ -1,0 +1,44 @@
+name: Eatigo live discount experiment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - experiment/eatigo-live-discounts
+    paths:
+      - 'scripts/experiment_eatigo_today.py'
+      - 'tests/test_eatigo_today_experiment.py'
+      - 'experiments/eatigo-live/**'
+      - '.github/workflows/eatigo-live-experiment.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install 'requests>=2.32,<3' 'beautifulsoup4>=4.12,<5' 'pytest>=8,<9'
+      - name: Run parser tests
+        run: python -m pytest -q tests/test_eatigo_today_experiment.py
+      - name: Download current production merchant dataset as read-only input
+        run: |
+          mkdir -p data
+          curl --fail --location --retry 4 --retry-delay 2 \
+            'https://wyattsingapore-ux.github.io/amex-sg-benefit-finder/data/merchants.json' \
+            --output data/merchants.json
+      - name: Probe today's Eatigo discounts over ordinary HTTP
+        run: python scripts/experiment_eatigo_today.py --limit 30 --workers 6
+      - name: Build isolated prototype artifact
+        run: |
+          mkdir -p experiments/eatigo-live/data
+          cp data/eatigo_today.json experiments/eatigo-live/data/eatigo_today.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eatigo-live-discount-experiment
+          path: experiments/eatigo-live
+          if-no-files-found: error
