@@ -1,11 +1,16 @@
 {
-  "experiment": "eatigo-live-discounts-v1",
+  "experiment": "eatigo-live-discounts-v2-full-scale",
   "date_sg": "2026-08-19",
-  "fetched_at": "2026-08-19T15:16:50.457003+08:00",
-  "source": "Eatigo branch pages (ordinary HTTP; no Playwright)",
+  "fetched_at": "2026-08-19T17:48:57.724567+08:00",
+  "source": "Eatigo branch pages (ordinary HTTP; no Playwright for slot retrieval)",
   "restaurants_attempted": 30,
-  "restaurants_with_future_slots": 30,
-  "restaurants_with_50pct_or_better": 20,
+  "restaurants_with_future_slots": 29,
+  "restaurants_mapped_with_future_slots": 29,
+  "restaurants_with_50pct_or_better": 8,
+  "request_errors": 0,
+  "refresh_seconds": 6.33,
+  "restaurants_per_second": 4.74,
+  "workers": 6,
   "restaurants": [
     {
       "id": "a0c0e1fc2f42d1",
@@ -18,26 +23,6 @@
       "lng": 103.844472777114,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 50
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 20
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
         {
           "time": "18:00",
           "discount": 20
@@ -75,7 +60,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -89,26 +74,6 @@
       "lng": 103.845618295657,
       "lc": false,
       "slots": [
-        {
-          "time": "16:30",
-          "discount": 10
-        },
-        {
-          "time": "17:00",
-          "discount": 10
-        },
-        {
-          "time": "17:30",
-          "discount": 10
-        },
-        {
-          "time": "18:00",
-          "discount": 10
-        },
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -192,26 +157,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 30
-        },
-        {
-          "time": "16:00",
-          "discount": 30
-        },
-        {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 30
-        },
-        {
-          "time": "17:30",
-          "discount": 30
-        },
-        {
           "time": "18:00",
           "discount": 50
         },
@@ -246,26 +191,6 @@
       "lng": 103.757451263299,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 20
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
         {
           "time": "18:00",
           "discount": 20
@@ -318,26 +243,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 30
-        },
-        {
-          "time": "16:00",
-          "discount": 40
-        },
-        {
-          "time": "16:30",
-          "discount": 40
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 10
-        },
-        {
           "time": "18:00",
           "discount": 10
         },
@@ -366,7 +271,7 @@
           "discount": 30
         }
       ],
-      "best_today": 40,
+      "best_today": 30,
       "error": null
     },
     {
@@ -380,26 +285,6 @@
       "lng": 103.862331661034,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 50
-        },
-        {
-          "time": "16:00",
-          "discount": 30
-        },
-        {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 30
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
         {
           "time": "18:00",
           "discount": 20
@@ -421,7 +306,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -435,26 +320,6 @@
       "lng": 103.912635422712,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 20
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
         {
           "time": "18:00",
           "discount": 20
@@ -499,26 +364,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 20
-        },
-        {
-          "time": "17:00",
-          "discount": 50
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
-        {
           "time": "18:00",
           "discount": 20
         },
@@ -547,7 +392,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -562,26 +407,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 30
-        },
-        {
-          "time": "17:30",
-          "discount": 10
-        },
-        {
           "time": "18:00",
           "discount": 10
         },
@@ -610,7 +435,7 @@
           "discount": 20
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -624,26 +449,6 @@
       "lng": 103.941943293971,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 30
-        },
-        {
-          "time": "17:30",
-          "discount": 10
-        },
         {
           "time": "18:00",
           "discount": 10
@@ -665,7 +470,7 @@
           "discount": 20
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -679,14 +484,6 @@
       "lng": 103.839199219609,
       "lc": false,
       "slots": [
-        {
-          "time": "17:00",
-          "discount": 50
-        },
-        {
-          "time": "17:30",
-          "discount": 30
-        },
         {
           "time": "18:00",
           "discount": 15
@@ -731,26 +528,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 35
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
-        {
           "time": "18:00",
           "discount": 20
         },
@@ -779,7 +556,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -794,26 +571,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 35
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
-        {
           "time": "18:00",
           "discount": 20
         },
@@ -842,7 +599,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -857,26 +614,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 35
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
-        {
           "time": "18:00",
           "discount": 20
         },
@@ -905,7 +642,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -920,22 +657,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 50
-        },
-        {
-          "time": "17:30",
-          "discount": 50
-        },
-        {
-          "time": "18:00",
-          "discount": 25
-        },
-        {
           "time": "19:00",
           "discount": 25
         },
@@ -960,7 +681,7 @@
           "discount": 25
         }
       ],
-      "best_today": 50,
+      "best_today": 25,
       "error": null
     },
     {
@@ -975,26 +696,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 30
-        },
-        {
-          "time": "17:30",
-          "discount": 30
-        },
-        {
-          "time": "18:00",
-          "discount": 25
-        },
-        {
-          "time": "18:30",
-          "discount": 25
-        },
-        {
           "time": "19:00",
           "discount": 25
         },
@@ -1019,7 +720,7 @@
           "discount": 25
         }
       ],
-      "best_today": 30,
+      "best_today": 25,
       "error": null
     },
     {
@@ -1033,26 +734,6 @@
       "lng": 103.852844801266,
       "lc": false,
       "slots": [
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 50
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
-        {
-          "time": "18:00",
-          "discount": 20
-        },
-        {
-          "time": "18:30",
-          "discount": 20
-        },
         {
           "time": "19:00",
           "discount": 20
@@ -1074,7 +755,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -1088,26 +769,6 @@
       "lng": 103.836160045113,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 30
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
         {
           "time": "18:00",
           "discount": 15
@@ -1152,26 +813,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 20
-        },
-        {
           "time": "18:00",
           "discount": 20
         },
@@ -1208,7 +849,7 @@
           "discount": 10
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -1262,26 +903,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 50
-        },
-        {
-          "time": "16:00",
-          "discount": 30
-        },
-        {
-          "time": "16:30",
-          "discount": 30
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 15
-        },
-        {
           "time": "18:00",
           "discount": 15
         },
@@ -1302,7 +923,7 @@
           "discount": 20
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -1316,26 +937,6 @@
       "lng": 103.856687778864,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 50
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 50
-        },
-        {
-          "time": "17:30",
-          "discount": 50
-        },
         {
           "time": "18:00",
           "discount": 50
@@ -1400,10 +1001,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "17:30",
-          "discount": 50
-        },
-        {
           "time": "18:00",
           "discount": 10
         },
@@ -1447,26 +1044,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "15:30",
-          "discount": 20
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 20
-        },
-        {
-          "time": "17:00",
-          "discount": 20
-        },
-        {
-          "time": "17:30",
-          "discount": 35
-        },
-        {
           "time": "18:00",
           "discount": 35
         },
@@ -1506,22 +1083,6 @@
       "lc": false,
       "slots": [
         {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 40
-        },
-        {
-          "time": "17:30",
-          "discount": 40
-        },
-        {
           "time": "18:00",
           "discount": 30
         },
@@ -1554,7 +1115,7 @@
           "discount": 30
         }
       ],
-      "best_today": 50,
+      "best_today": 30,
       "error": null
     },
     {
@@ -1568,26 +1129,6 @@
       "lng": 103.853118508952,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 50
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 50
-        },
-        {
-          "time": "17:30",
-          "discount": 40
-        },
         {
           "time": "18:00",
           "discount": 40
@@ -1613,7 +1154,7 @@
           "discount": 30
         }
       ],
-      "best_today": 50,
+      "best_today": 40,
       "error": null
     },
     {
@@ -1626,21 +1167,8 @@
       "lat": 1.30724452858823,
       "lng": 103.90646113261,
       "lc": false,
-      "slots": [
-        {
-          "time": "15:30",
-          "discount": 10
-        },
-        {
-          "time": "16:00",
-          "discount": 20
-        },
-        {
-          "time": "16:30",
-          "discount": 20
-        }
-      ],
-      "best_today": 20,
+      "slots": [],
+      "best_today": null,
       "error": null
     },
     {
@@ -1654,26 +1182,6 @@
       "lng": 103.867100437227,
       "lc": false,
       "slots": [
-        {
-          "time": "15:30",
-          "discount": 50
-        },
-        {
-          "time": "16:00",
-          "discount": 50
-        },
-        {
-          "time": "16:30",
-          "discount": 50
-        },
-        {
-          "time": "17:00",
-          "discount": 30
-        },
-        {
-          "time": "17:30",
-          "discount": 30
-        },
         {
           "time": "18:00",
           "discount": 30
@@ -1713,10 +1221,6 @@
       "lng": 103.859957452243,
       "lc": false,
       "slots": [
-        {
-          "time": "17:30",
-          "discount": 30
-        },
         {
           "time": "18:00",
           "discount": 30
