@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Eatigo Live Discount Experiment</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    body{margin:0;background:#071426;color:#f5f8fc;font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}header{padding:18px 22px;background:#0d2039}h1{font-size:22px;margin:0 0 4px}.muted{color:#9fb2ca}.bar{padding:12px 22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.map{height:70vh}.legend{font-size:13px}.discount-pin{display:flex;align-items:center;justify-content:center;min-width:44px;height:30px;padding:0 6px;border-radius:16px;background:#0b1d33;border:2px solid #fff;color:#fff;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.45)}.discount-pin.best50{background:#8a1f11}.discount-pin.best40{background:#a24c14}.discount-pin.best30{background:#8b6d12}.discount-pin.best20{background:#1b6688}.discount-pin.best10{background:#42566a}.leaflet-tooltip{background:#0c2139;color:#fff;border-color:#31516f;box-shadow:0 4px 16px rgba(0,0,0,.35)}.slots{font-size:12px;line-height:1.55}.slots strong{font-size:13px}.slots table{border-collapse:collapse;margin-top:5px}.slots td{padding:1px 8px 1px 0}.status{font-weight:700}
+  </style>
+</head>
+<body>
+<header><h1>Eatigo Live Discount Experiment</h1><div class="muted">Isolated prototype branch — does not affect the production site.</div></header>
+<div class="bar"><span id="status" class="status">Loading…</span><span class="legend">Pin = best still-bookable discount today. Hover for today's slots. Click opens Eatigo.</span></div>
+<div id="map" class="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="app.js"></script>
+</body></html>
