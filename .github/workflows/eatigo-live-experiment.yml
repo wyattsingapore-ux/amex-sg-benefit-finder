@@ -20,48 +20,95 @@ permissions:
 jobs:
   experiment:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
           ref: experiment/eatigo-live-discounts
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install 'requests>=2.32,<3' 'beautifulsoup4>=4.12,<5' 'pytest>=8,<9'
+
+      - name: Install experiment dependencies
+        run: |
+          pip install 'requests>=2.32,<3' 'beautifulsoup4>=4.12,<5' 'pytest>=8,<9' 'playwright>=1.54,<2'
+          python -m playwright install --with-deps chromium
+
       - name: Run parser tests
         run: python -m pytest -q tests/test_eatigo_today_experiment.py
-      - name: Download current production merchant dataset as read-only input
+
+      - name: Download production data only as isolated starting input
         run: |
           mkdir -p data
           curl --fail --location --retry 4 --retry-delay 2 \
             'https://wyattsingapore-ux.github.io/amex-sg-benefit-finder/data/merchants.json' \
             --output data/merchants.json
-      - name: Probe today's Eatigo discounts over ordinary HTTP
+          curl --fail --location --retry 2 \
+            'https://wyattsingapore-ux.github.io/amex-sg-benefit-finder/data/geocodes.json' \
+            --output data/geocodes.json || echo '{}' > data/geocodes.json
+
+      - name: Discover complete Eatigo Singapore list for experiment
+        id: discovery
+        run: |
+          set +e
+          /usr/bin/time -f 'FULL_LIST_DISCOVERY_SECONDS=%e' \
+            python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-full-list.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            tail -n 250 eatigo-full-list.log
+            exit "$status"
+          fi
+          python - <<'PY'
+          import json
+          p=json.load(open('data/merchants.json', encoding='utf-8'))
+          rows=[m for m in p.get('merchants',[]) if m.get('eatigo') and m.get('eatigo_url')]
+          print(f'FULL_EATIGO_ROWS={len(rows)}')
+          if len(rows) < 200:
+              raise SystemExit(f'Full-scale experiment still has only {len(rows)} Eatigo rows')
+          PY
+
+      - name: Geocode complete experiment list for map performance test
+        env:
+          ONEMAP_API_EMAIL: ${{ secrets.ONEMAP_API_EMAIL }}
+          ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
+        run: python -m scripts.geocode 2>&1 | tee eatigo-geocode.log
+
+      - name: Fetch today's discounts for ALL Eatigo restaurants
         id: probe
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set +e
-          python scripts/experiment_eatigo_today.py --limit 30 --workers 6 2>&1 | tee eatigo-experiment.log
+          python scripts/experiment_eatigo_today.py --limit 0 --workers 8 2>&1 | tee eatigo-experiment.log
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
             {
-              echo "Isolated Eatigo live-discount experiment FAILED in run $GITHUB_RUN_NUMBER."
+              echo "Isolated full-scale Eatigo live-discount experiment FAILED in run $GITHUB_RUN_NUMBER."
               echo
+              echo '### Full-list discovery tail'
               echo '```text'
-              tail -n 220 eatigo-experiment.log
+              tail -n 100 eatigo-full-list.log
+              echo '```'
+              echo
+              echo '### Live-discount probe tail'
+              echo '```text'
+              tail -n 180 eatigo-experiment.log
               echo '```'
             } > experiment-result.md
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo live discount experiment FAILED - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL live discount experiment FAILED - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
             exit "$status"
           fi
-      - name: Build standalone browser preview
+
+      - name: Build standalone full-scale browser preview
         run: |
           mkdir -p experiments/eatigo-live/data
           cp data/eatigo_today.json experiments/eatigo-live/data/eatigo_today.json
           python scripts/build_eatigo_live_preview.py
-      - name: Save latest preview back to experiment branch
+
+      - name: Save latest full preview back to experiment branch
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -69,25 +116,33 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Preview data unchanged; nothing to commit.'
           else
-            git commit -m "Update Eatigo live-discount experiment preview"
+            git commit -m "Update full Eatigo live-discount experiment preview"
             git push origin HEAD:experiment/eatigo-live-discounts
           fi
-      - name: Report successful experiment
+
+      - name: Report successful full-scale experiment
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           {
-            echo "Isolated Eatigo live-discount experiment SUCCEEDED in run $GITHUB_RUN_NUMBER."
+            echo "Isolated FULL-SCALE Eatigo live-discount experiment SUCCEEDED in run $GITHUB_RUN_NUMBER."
             echo
+            echo '### Full-list discovery'
             echo '```text'
-            tail -n 80 eatigo-experiment.log
+            tail -n 45 eatigo-full-list.log
             echo '```'
             echo
-            echo "Standalone browser preview was generated on the experiment branch."
+            echo '### Today discount refresh performance'
+            echo '```text'
+            tail -n 45 eatigo-experiment.log
+            echo '```'
+            echo
+            echo "Standalone full browser preview was regenerated on experiment/eatigo-live-discounts."
           } > experiment-result.md
-          gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo live discount experiment SUCCESS - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL live discount experiment SUCCESS - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
+
       - uses: actions/upload-artifact@v4
         with:
-          name: eatigo-live-discount-experiment
+          name: eatigo-full-live-discount-experiment
           path: experiments/eatigo-live
           if-no-files-found: error
