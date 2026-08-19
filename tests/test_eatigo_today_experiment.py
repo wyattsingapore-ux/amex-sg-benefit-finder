@@ -1,7 +1,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from scripts.experiment_eatigo_today import parse_slots, with_today
+from scripts.experiment_eatigo_today import parse_cuisines, parse_slots, with_today
 
 SG = ZoneInfo("Asia/Singapore")
 
@@ -15,6 +15,19 @@ def test_parse_future_slots_only():
         {"time": "14:00", "discount": 50},
         {"time": "18:30", "discount": 40},
     ]
+
+
+def test_parse_source_cuisines():
+    html = '''<html><body><h2>About</h2><div>Cuisines</div>
+    <div>International, American Cuisine</div><div>Atmospheres</div>
+    <div>Casual Dining, Bistro</div><div>Business Hours</div></body></html>'''
+    assert parse_cuisines(html) == ["International", "American"]
+
+
+def test_parse_cuisines_from_separate_nodes():
+    html = '''<html><body><span>Cuisines</span><a>Japanese Cuisine</a>
+    <a>Asian Fusion</a><span>Spoken Languages</span><span>English</span></body></html>'''
+    assert parse_cuisines(html) == ["Japanese", "Asian Fusion"]
 
 
 def test_force_singapore_date_context():
