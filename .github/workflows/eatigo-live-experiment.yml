@@ -50,6 +50,8 @@ jobs:
 
       - name: Discover complete Eatigo Singapore list for experiment
         id: discovery
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set +e
           /usr/bin/time -f 'FULL_LIST_DISCOVERY_SECONDS=%e' \
@@ -57,10 +59,18 @@ jobs:
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
-            tail -n 250 eatigo-full-list.log
+            {
+              echo "Isolated FULL-SCALE Eatigo discovery FAILED in run $GITHUB_RUN_NUMBER."
+              echo
+              echo '```text'
+              tail -n 250 eatigo-full-list.log
+              echo '```'
+            } > discovery-failure.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL discovery FAILED - run $GITHUB_RUN_NUMBER" --body-file discovery-failure.md || true
             exit "$status"
           fi
-          python - <<'PY'
+          set +e
+          python - <<'PY' 2>&1 | tee eatigo-row-count.log
           import json
           p=json.load(open('data/merchants.json', encoding='utf-8'))
           rows=[m for m in p.get('merchants',[]) if m.get('eatigo') and m.get('eatigo_url')]
@@ -68,6 +78,25 @@ jobs:
           if len(rows) < 200:
               raise SystemExit(f'Full-scale experiment still has only {len(rows)} Eatigo rows')
           PY
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "Isolated FULL-SCALE Eatigo row-count validation FAILED in run $GITHUB_RUN_NUMBER."
+              echo
+              echo '### Discovery tail'
+              echo '```text'
+              tail -n 200 eatigo-full-list.log
+              echo '```'
+              echo
+              echo '### Row count'
+              echo '```text'
+              cat eatigo-row-count.log
+              echo '```'
+            } > discovery-failure.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL discovery FAILED - run $GITHUB_RUN_NUMBER" --body-file discovery-failure.md || true
+            exit "$status"
+          fi
 
       - name: Geocode complete experiment list for map performance test
         env:
