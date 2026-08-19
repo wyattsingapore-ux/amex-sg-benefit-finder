@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   experiment:
@@ -32,7 +33,33 @@ jobs:
             'https://wyattsingapore-ux.github.io/amex-sg-benefit-finder/data/merchants.json' \
             --output data/merchants.json
       - name: Probe today's Eatigo discounts over ordinary HTTP
-        run: python scripts/experiment_eatigo_today.py --limit 30 --workers 6
+        id: probe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python scripts/experiment_eatigo_today.py --limit 30 --workers 6 2>&1 | tee eatigo-experiment.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "Isolated Eatigo live-discount experiment FAILED in run $GITHUB_RUN_NUMBER."
+              echo
+              echo '```text'
+              tail -n 220 eatigo-experiment.log
+              echo '```'
+            } > experiment-result.md
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo live discount experiment FAILED - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
+            exit "$status"
+          fi
+          {
+            echo "Isolated Eatigo live-discount experiment SUCCEEDED in run $GITHUB_RUN_NUMBER."
+            echo
+            echo '```text'
+            tail -n 80 eatigo-experiment.log
+            echo '```'
+          } > experiment-result.md
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo live discount experiment SUCCESS - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
       - name: Build isolated prototype artifact
         run: |
           mkdir -p experiments/eatigo-live/data
