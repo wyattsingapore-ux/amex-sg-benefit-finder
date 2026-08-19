@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/experiment_eatigo_today.py'
       - 'scripts/build_eatigo_live_preview.py'
+      - 'scripts/augment_eatigo_full_experiment.py'
       - 'tests/test_eatigo_today_experiment.py'
       - 'experiments/eatigo-live/index.html'
       - 'experiments/eatigo-live/app.js'
@@ -55,7 +56,7 @@ jobs:
         run: |
           set +e
           /usr/bin/time -f 'FULL_LIST_DISCOVERY_SECONDS=%e' \
-            python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-full-list.log
+            python -m scripts.augment_eatigo_full_experiment 2>&1 | tee eatigo-full-list.log
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -63,7 +64,7 @@ jobs:
               echo "Isolated FULL-SCALE Eatigo discovery FAILED in run $GITHUB_RUN_NUMBER."
               echo
               echo '```text'
-              tail -n 250 eatigo-full-list.log
+              tail -n 300 eatigo-full-list.log
               echo '```'
             } > discovery-failure.md
             gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL discovery FAILED - run $GITHUB_RUN_NUMBER" --body-file discovery-failure.md || true
@@ -72,11 +73,18 @@ jobs:
           set +e
           python - <<'PY' 2>&1 | tee eatigo-row-count.log
           import json
+          from collections import Counter
           p=json.load(open('data/merchants.json', encoding='utf-8'))
           rows=[m for m in p.get('merchants',[]) if m.get('eatigo') and m.get('eatigo_url')]
+          ids=[str(m.get('eatigo_branch_id') or '') for m in rows]
+          dup=sum(v-1 for k,v in Counter(ids).items() if k and v>1)
           print(f'FULL_EATIGO_ROWS={len(rows)}')
+          print(f'FULL_EATIGO_UNIQUE_BRANCHES={len(set(x for x in ids if x))}')
+          print(f'FULL_EATIGO_DUPLICATE_ROWS={dup}')
           if len(rows) < 200:
               raise SystemExit(f'Full-scale experiment still has only {len(rows)} Eatigo rows')
+          if dup:
+              raise SystemExit(f'Full-scale experiment contains {dup} duplicate Eatigo branch rows')
           PY
           status=${PIPESTATUS[0]}
           set -e
@@ -86,7 +94,7 @@ jobs:
               echo
               echo '### Discovery tail'
               echo '```text'
-              tail -n 200 eatigo-full-list.log
+              tail -n 220 eatigo-full-list.log
               echo '```'
               echo
               echo '### Row count'
@@ -119,12 +127,12 @@ jobs:
               echo
               echo '### Full-list discovery tail'
               echo '```text'
-              tail -n 100 eatigo-full-list.log
+              tail -n 120 eatigo-full-list.log
               echo '```'
               echo
               echo '### Live-discount probe tail'
               echo '```text'
-              tail -n 180 eatigo-experiment.log
+              tail -n 200 eatigo-experiment.log
               echo '```'
             } > experiment-result.md
             gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL live discount experiment FAILED - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
@@ -145,7 +153,7 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Preview data unchanged; nothing to commit.'
           else
-            git commit -m "Update full Eatigo live-discount experiment preview"
+            git commit -m "Update clean full Eatigo live-discount experiment preview"
             git push origin HEAD:experiment/eatigo-live-discounts
           fi
 
@@ -158,15 +166,20 @@ jobs:
             echo
             echo '### Full-list discovery'
             echo '```text'
-            tail -n 45 eatigo-full-list.log
+            tail -n 65 eatigo-full-list.log
+            echo '```'
+            echo
+            echo '### Row validation'
+            echo '```text'
+            cat eatigo-row-count.log
             echo '```'
             echo
             echo '### Today discount refresh performance'
             echo '```text'
-            tail -n 45 eatigo-experiment.log
+            tail -n 55 eatigo-experiment.log
             echo '```'
             echo
-            echo "Standalone full browser preview was regenerated on experiment/eatigo-live-discounts."
+            echo "Standalone clean full browser preview was regenerated on experiment/eatigo-live-discounts."
           } > experiment-result.md
           gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo FULL live discount experiment SUCCESS - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
 
