@@ -1,7 +1,7 @@
 const map = L.map('map').setView([1.3521, 103.8198], 11.4);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function bucket(p){if(p>=50)return'best50';if(p>=40)return'best40';if(p>=30)return'best30';if(p>=20)return'best20';return'best10';}
 function tooltip(r){
   const rows=(r.slots||[]).map(s=>`<tr><td>${esc(s.time)}</td><td><strong>${esc(s.discount)}%</strong></td></tr>`).join('');
