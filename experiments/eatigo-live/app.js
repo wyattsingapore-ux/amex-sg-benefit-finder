@@ -1,11 +1,17 @@
 const map = L.map('map').setView([1.3521, 103.8198], 11.4);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
 
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));}
 function bucket(p){if(p>=50)return'best50';if(p>=40)return'best40';if(p>=30)return'best30';if(p>=20)return'best20';return'best10';}
 function tooltip(r){
   const rows=(r.slots||[]).map(s=>`<tr><td>${esc(s.time)}</td><td><strong>${esc(s.discount)}%</strong></td></tr>`).join('');
-  return `<div class="slots"><strong>${esc(r.name)}</strong><br>${esc(r.address||'')}<br><br><strong>Today</strong><table>${rows}</table><br>Best remaining: <strong>${esc(r.best_today)}%</strong></div>`;
+  return `<div class="slots-card">
+    <div class="slots-head"><strong class="restaurant-name">${esc(r.name)}</strong><span class="best-chip">${esc(r.best_today)}%</span></div>
+    <div class="slot-address">${esc(r.address||'')}</div>
+    <div class="slots-label">Today · remaining times</div>
+    <div class="slots-scroll"><table>${rows}</table></div>
+    <div class="best-row">Best remaining <strong>${esc(r.best_today)}%</strong></div>
+  </div>`;
 }
 
 const dataPromise = window.EATIGO_TODAY
@@ -19,7 +25,23 @@ dataPromise.then(data=>{
   for(const r of usable){
     const p=Number(r.best_today);
     const icon=L.divIcon({className:'',html:`<div class="discount-pin ${bucket(p)}">${p}%</div>`,iconSize:[52,34],iconAnchor:[26,17]});
-    const m=L.marker([r.lat,r.lng],{icon}).addTo(map).bindTooltip(tooltip(r),{direction:'top',sticky:true,opacity:.98});
+    const m=L.marker([r.lat,r.lng],{icon})
+      .addTo(map)
+      .bindTooltip(tooltip(r),{
+        direction:'auto',
+        sticky:false,
+        offset:[14,0],
+        opacity:.99,
+        className:'eatigo-slot-tooltip'
+      });
+    m.on('mouseover',()=>{
+      const pin=m.getElement()?.querySelector('.discount-pin');
+      if(pin) pin.classList.add('hovered');
+    });
+    m.on('mouseout',()=>{
+      const pin=m.getElement()?.querySelector('.discount-pin');
+      if(pin) pin.classList.remove('hovered');
+    });
     m.on('click',()=>window.open(r.eatigo_url,'_blank','noopener'));
     markers.push(m);
   }
