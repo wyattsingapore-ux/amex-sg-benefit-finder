@@ -1,16 +1,183 @@
 {
-  "experiment": "eatigo-live-discounts-v2-full-scale",
+  "experiment": "eatigo-live-discounts-v3-filters",
   "date_sg": "2026-08-19",
-  "fetched_at": "2026-08-19T18:21:05.579215+08:00",
+  "fetched_at": "2026-08-19T18:59:05.327037+08:00",
   "source": "Eatigo branch pages (ordinary HTTP; no Playwright for slot retrieval)",
   "restaurants_attempted": 317,
-  "restaurants_with_future_slots": 303,
+  "restaurants_with_future_slots": 302,
   "restaurants_mapped_with_future_slots": 281,
-  "restaurants_with_50pct_or_better": 97,
+  "restaurants_with_cuisine": 316,
+  "restaurants_with_50pct_or_better": 88,
   "request_errors": 0,
-  "refresh_seconds": 57.76,
-  "restaurants_per_second": 5.49,
+  "refresh_seconds": 70.7,
+  "restaurants_per_second": 4.48,
   "workers": 8,
+  "cuisine_types": [
+    {
+      "name": "Asian",
+      "count": 82
+    },
+    {
+      "name": "International",
+      "count": 55
+    },
+    {
+      "name": "Chinese",
+      "count": 50
+    },
+    {
+      "name": "Buffet",
+      "count": 48
+    },
+    {
+      "name": "Indian",
+      "count": 43
+    },
+    {
+      "name": "Bars and pubs",
+      "count": 38
+    },
+    {
+      "name": "Western",
+      "count": 31
+    },
+    {
+      "name": "Italian",
+      "count": 21
+    },
+    {
+      "name": "European",
+      "count": 16
+    },
+    {
+      "name": "Steamboat / Hot Pot",
+      "count": 16
+    },
+    {
+      "name": "Japanese",
+      "count": 14
+    },
+    {
+      "name": "Korean",
+      "count": 14
+    },
+    {
+      "name": "Rice & Noodles Restaurant",
+      "count": 14
+    },
+    {
+      "name": "Singaporean",
+      "count": 13
+    },
+    {
+      "name": "Cafe",
+      "count": 12
+    },
+    {
+      "name": "Mediterranean",
+      "count": 11
+    },
+    {
+      "name": "Steakhouse",
+      "count": 11
+    },
+    {
+      "name": "Thai",
+      "count": 10
+    },
+    {
+      "name": "Bakery and Dessert",
+      "count": 9
+    },
+    {
+      "name": "Beverage",
+      "count": 9
+    },
+    {
+      "name": "Bistro",
+      "count": 9
+    },
+    {
+      "name": "Seafood",
+      "count": 8
+    },
+    {
+      "name": "American",
+      "count": 7
+    },
+    {
+      "name": "Brunch",
+      "count": 7
+    },
+    {
+      "name": "Healthy Food",
+      "count": 7
+    },
+    {
+      "name": "Hotel Restaurant",
+      "count": 7
+    },
+    {
+      "name": "Shared Dishes",
+      "count": 7
+    },
+    {
+      "name": "BBQ / Grill",
+      "count": 6
+    },
+    {
+      "name": "Pasta",
+      "count": 6
+    },
+    {
+      "name": "Cantonese",
+      "count": 5
+    },
+    {
+      "name": "Malaysian",
+      "count": 4
+    },
+    {
+      "name": "Curry",
+      "count": 3
+    },
+    {
+      "name": "French",
+      "count": 3
+    },
+    {
+      "name": "Mexican",
+      "count": 3
+    },
+    {
+      "name": "Beverage Shop",
+      "count": 2
+    },
+    {
+      "name": "Hong Kong Style Cafe",
+      "count": 2
+    },
+    {
+      "name": "Omakase Sushi",
+      "count": 2
+    },
+    {
+      "name": "Vegan",
+      "count": 2
+    },
+    {
+      "name": "Vegetarian",
+      "count": 2
+    },
+    {
+      "name": "Izakaya",
+      "count": 1
+    },
+    {
+      "name": "Middle Eastern",
+      "count": 1
+    }
+  ],
   "restaurants": [
     {
       "id": "a0c0e1fc2f42d1",
@@ -22,15 +189,11 @@
       "lat": 1.29770847350941,
       "lng": 103.844472777114,
       "lc": false,
+      "cuisines": [
+        "International",
+        "American"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -69,11 +232,12 @@
       "lat": 1.27679992796433,
       "lng": 103.845618295657,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs",
+        "Bakery and Dessert",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -104,15 +268,10 @@
       "lat": 1.32699075133711,
       "lng": 103.847403697576,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -143,15 +302,13 @@
       "lat": 1.29593189477195,
       "lng": 103.859014406736,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Thai",
+        "Malaysian",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -161,7 +318,7 @@
           "discount": 30
         }
       ],
-      "best_today": 50,
+      "best_today": 30,
       "error": null
     },
     {
@@ -174,15 +331,10 @@
       "lat": 1.31641321892509,
       "lng": 103.757451263299,
       "lc": false,
+      "cuisines": [
+        "Bakery and Dessert"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -221,15 +373,15 @@
       "lat": 1.30101436404056,
       "lng": 103.838360664485,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Bakery and Dessert",
+        "Beverage",
+        "Brunch",
+        "Cafe",
+        "Bistro"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -260,15 +412,12 @@
       "lat": 1.30231590504573,
       "lng": 103.862331661034,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Bistro",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -291,15 +440,14 @@
       "lat": 1.41470557625612,
       "lng": 103.912635422712,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "BBQ / Grill",
+        "Steamboat / Hot Pot",
+        "Korean",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -330,15 +478,12 @@
       "lat": 1.29858300811483,
       "lng": 103.849316124707,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Korean",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -369,15 +514,10 @@
       "lat": 1.30309150706248,
       "lng": 103.858920996368,
       "lc": false,
+      "cuisines": [
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -408,15 +548,10 @@
       "lat": 1.3523360160745,
       "lng": 103.941943293971,
       "lc": false,
+      "cuisines": [
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -439,11 +574,11 @@
       "lat": 1.29008339576408,
       "lng": 103.839199219609,
       "lc": false,
+      "cuisines": [
+        "BBQ / Grill",
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -478,15 +613,11 @@
       "lat": 1.35872080296023,
       "lng": 103.98796702598,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs",
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -517,15 +648,10 @@
       "lat": 1.35872080296023,
       "lng": 103.98796702598,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -556,15 +682,11 @@
       "lat": 1.35872080296023,
       "lng": 103.98796702598,
       "lc": false,
+      "cuisines": [
+        "Italian",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -595,11 +717,11 @@
       "lat": 1.27929478959373,
       "lng": 103.850552555075,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 25
-        },
         {
           "time": "20:00",
           "discount": 25
@@ -630,11 +752,11 @@
       "lat": 1.29479670956332,
       "lng": 103.852573366033,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 25
-        },
         {
           "time": "20:00",
           "discount": 25
@@ -665,11 +787,10 @@
       "lat": 1.27737235072298,
       "lng": 103.852844801266,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 20
-        },
         {
           "time": "20:00",
           "discount": 20
@@ -696,15 +817,12 @@
       "lat": 1.28769285607795,
       "lng": 103.836160045113,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Asian",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -735,15 +853,11 @@
       "lat": 1.3086368168156,
       "lng": 103.85648676002,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -782,15 +896,11 @@
       "lat": 1.28896723470825,
       "lng": 103.834188484711,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -817,15 +927,14 @@
       "lat": 1.29936480411316,
       "lng": 103.848687419363,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Brunch",
+        "Cafe",
+        "Rice & Noodles Restaurant",
+        "Bakery and Dessert"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -848,15 +957,10 @@
       "lat": 1.31004654427584,
       "lng": 103.856687778864,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -907,15 +1011,10 @@
       "lat": 1.33535677709911,
       "lng": 103.963892243026,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -946,15 +1045,10 @@
       "lat": 1.30744253289071,
       "lng": 103.828776671636,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 35
-        },
-        {
-          "time": "19:00",
-          "discount": 35
-        },
         {
           "time": "19:30",
           "discount": 35
@@ -981,15 +1075,10 @@
       "lat": 1.29953466307853,
       "lng": 103.849728550018,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -1024,15 +1113,10 @@
       "lat": 1.29960950187876,
       "lng": 103.853118508952,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 40
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -1046,7 +1130,7 @@
           "discount": 30
         }
       ],
-      "best_today": 40,
+      "best_today": 30,
       "error": null
     },
     {
@@ -1059,6 +1143,10 @@
       "lat": 1.30724452858823,
       "lng": 103.90646113261,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -1073,15 +1161,10 @@
       "lat": 1.32701333234404,
       "lng": 103.867100437227,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -1108,15 +1191,12 @@
       "lat": 1.30081474072147,
       "lng": 103.859957452243,
       "lc": false,
+      "cuisines": [
+        "Middle Eastern",
+        "International",
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -1151,15 +1231,16 @@
       "lat": 1.31172455497969,
       "lng": 103.794736260031,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Brunch",
+        "Cafe",
+        "Vegetarian",
+        "Curry",
+        "Bars and pubs",
+        "Vegan"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1182,15 +1263,10 @@
       "lat": 1.30180240246273,
       "lng": 103.859921816094,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -1221,15 +1297,10 @@
       "lat": 1.31119866736412,
       "lng": 103.859699974328,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -1272,15 +1343,8 @@
       "lat": 1.2882180283587,
       "lng": 103.845692302876,
       "lc": false,
+      "cuisines": [],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -1311,11 +1375,11 @@
       "lat": 1.30875934220256,
       "lng": 103.854893764531,
       "lc": false,
+      "cuisines": [
+        "Cafe",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
         {
           "time": "19:00",
           "discount": 15
@@ -1350,15 +1414,10 @@
       "lat": 1.27484783486942,
       "lng": 103.79528789973,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1401,15 +1460,10 @@
       "lat": 1.31641321892509,
       "lng": 103.757451263299,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1444,15 +1498,11 @@
       "lat": 1.29762738757906,
       "lng": 103.857712874744,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1483,11 +1533,12 @@
       "lat": 1.29479670956332,
       "lng": 103.852573366033,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 30
-        },
         {
           "time": "20:00",
           "discount": 30
@@ -1514,15 +1565,10 @@
       "lat": 1.29593189477195,
       "lng": 103.859014406736,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1549,15 +1595,10 @@
       "lat": 1.33873066388191,
       "lng": 103.871670008192,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1580,15 +1621,10 @@
       "lat": 1.30119616354696,
       "lng": 103.860108359931,
       "lc": false,
+      "cuisines": [
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1635,11 +1671,10 @@
       "lat": 1.30101436404056,
       "lng": 103.838360664485,
       "lc": false,
+      "cuisines": [
+        "Bakery and Dessert"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -1670,11 +1705,20 @@
       "lat": 1.27492765838262,
       "lng": 103.843549530562,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "International",
+        "Singaporean",
+        "Hotel Restaurant",
+        "Brunch",
+        "Cafe",
+        "Vegetarian",
+        "Bistro",
+        "Shared Dishes",
+        "Pasta",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -1693,6 +1737,10 @@
       "lat": 1.30583570585231,
       "lng": 103.827030983097,
       "lc": false,
+      "cuisines": [
+        "Hotel Restaurant",
+        "Asian"
+      ],
       "slots": [
         {
           "time": "22:00",
@@ -1716,15 +1764,10 @@
       "lat": 1.2820837651092,
       "lng": 103.851559731294,
       "lc": true,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -1751,15 +1794,10 @@
       "lat": 1.30535121238071,
       "lng": 103.788347370864,
       "lc": true,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -1798,11 +1836,11 @@
       "lat": 1.2827145607859,
       "lng": 103.848590125427,
       "lc": false,
+      "cuisines": [
+        "European",
+        "Bistro"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 20
@@ -1837,15 +1875,11 @@
       "lat": 1.33107936911264,
       "lng": 103.796095751068,
       "lc": false,
+      "cuisines": [
+        "Italian",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -1876,15 +1910,11 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -1894,7 +1924,7 @@
           "discount": 20
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -1907,15 +1937,11 @@
       "lat": 1.3317705447992,
       "lng": 103.879294500005,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -1933,7 +1959,7 @@
           "discount": 15
         }
       ],
-      "best_today": 50,
+      "best_today": 20,
       "error": null
     },
     {
@@ -1946,15 +1972,10 @@
       "lat": 1.38550907050444,
       "lng": 103.83456993327,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -1981,11 +2002,12 @@
       "lat": 1.39205314156706,
       "lng": 103.89507054384,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot",
+        "Asian",
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "20:30",
           "discount": 20
@@ -2004,15 +2026,14 @@
       "lat": 1.31899666903663,
       "lng": 103.894894915962,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot",
+        "Chinese",
+        "Rice & Noodles Restaurant",
+        "Seafood",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -2039,15 +2060,10 @@
       "lat": 1.29962022781589,
       "lng": 103.860647265508,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -2078,11 +2094,12 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot",
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -2109,15 +2126,12 @@
       "lat": 1.30771173944605,
       "lng": 103.834556167895,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Western",
+        "Cafe"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 25
@@ -2152,11 +2166,15 @@
       "lat": 1.27672492702287,
       "lng": 103.845155395387,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Healthy Food",
+        "Singaporean",
+        "Brunch",
+        "Curry",
+        "Pasta"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
         {
           "time": "19:00",
           "discount": 20
@@ -2175,15 +2193,11 @@
       "lat": 1.33426556588671,
       "lng": 103.9635837716,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -2214,15 +2228,10 @@
       "lat": 1.2882180283587,
       "lng": 103.845692302876,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -2257,11 +2266,11 @@
       "lat": 1.30502562565776,
       "lng": 103.832957478209,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -2288,11 +2297,10 @@
       "lat": 1.30502562565776,
       "lng": 103.832957478209,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -2319,15 +2327,10 @@
       "lat": 1.28629764521918,
       "lng": 103.849642769534,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -2374,15 +2377,10 @@
       "lat": 1.37843100800213,
       "lng": 103.762842789877,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -2405,15 +2403,10 @@
       "lat": 1.38550907050444,
       "lng": 103.83456993327,
       "lc": false,
+      "cuisines": [
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -2440,11 +2433,10 @@
       "lat": 1.30378484516693,
       "lng": 103.896481973781,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -2479,15 +2471,10 @@
       "lat": 1.30511719257423,
       "lng": 103.903257540377,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -2526,15 +2513,10 @@
       "lat": 1.29953466307853,
       "lng": 103.849728550018,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -2585,15 +2567,13 @@
       "lat": 1.36707357525622,
       "lng": 103.964632225014,
       "lc": false,
+      "cuisines": [
+        "American",
+        "Western",
+        "Italian",
+        "Pasta"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -2620,15 +2600,10 @@
       "lat": 1.28782986256687,
       "lng": 103.847869891787,
       "lc": false,
+      "cuisines": [
+        "American"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -2651,15 +2626,11 @@
       "lat": 1.29111729179215,
       "lng": 103.857758268089,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -2690,11 +2661,10 @@
       "lat": 1.27748817305035,
       "lng": 103.846222184202,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 30
-        },
         {
           "time": "20:00",
           "discount": 30
@@ -2717,11 +2687,11 @@
       "lat": 1.27492765838262,
       "lng": 103.843549530562,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -2748,15 +2718,11 @@
       "lat": 1.2882180283587,
       "lng": 103.845692302876,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 40
-        },
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -2783,15 +2749,16 @@
       "lat": 1.30106975506311,
       "lng": 103.905279491524,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Cantonese",
+        "Beverage",
+        "Asian",
+        "Singaporean",
+        "Seafood",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -2822,11 +2789,11 @@
       "lat": 1.32005187342709,
       "lng": 103.852519734445,
       "lc": false,
+      "cuisines": [
+        "International",
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
         {
           "time": "19:00",
           "discount": 20
@@ -2853,11 +2820,11 @@
       "lat": 1.29028193417518,
       "lng": 103.835147954372,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -2888,11 +2855,10 @@
       "lat": 1.31386945443377,
       "lng": 103.828606363886,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -2923,15 +2889,12 @@
       "lat": 1.28937099358897,
       "lng": 103.836603810879,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Asian",
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -2954,15 +2917,13 @@
       "lat": 1.39304270451204,
       "lng": 103.917401357783,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Beverage",
+        "Malaysian",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3005,15 +2966,11 @@
       "lat": 1.43772489910653,
       "lng": 103.844622141124,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3060,15 +3017,10 @@
       "lat": 1.31471081657773,
       "lng": 103.879367466135,
       "lc": false,
+      "cuisines": [
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3115,15 +3067,12 @@
       "lat": 1.27797081300813,
       "lng": 103.84385721797,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs",
+        "Asian",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 40
-        },
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -3170,15 +3119,10 @@
       "lat": 1.39232716391714,
       "lng": 103.979634518329,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -3205,11 +3149,10 @@
       "lat": 1.33434526640303,
       "lng": 103.889637526675,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -3244,11 +3187,10 @@
       "lat": 1.38519273288346,
       "lng": 103.944695550667,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -3275,15 +3217,10 @@
       "lat": 1.34159661676066,
       "lng": 103.919328795238,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -3318,15 +3255,10 @@
       "lat": 1.41997551595813,
       "lng": 103.863931571843,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3357,15 +3289,10 @@
       "lat": 1.33408359331373,
       "lng": 103.962946083391,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3392,15 +3319,12 @@
       "lat": 1.28076943504219,
       "lng": 103.852658562152,
       "lc": false,
+      "cuisines": [
+        "Italian",
+        "Bars and pubs",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3427,15 +3351,11 @@
       "lat": 1.29988844074642,
       "lng": 103.861262718488,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -3466,15 +3386,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3513,15 +3428,12 @@
       "lat": 1.31353499914335,
       "lng": 103.857057176775,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Healthy Food",
+        "Vegan"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3560,6 +3472,10 @@
       "lat": 1.32397332034066,
       "lng": 103.962657078821,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -3574,15 +3490,10 @@
       "lat": 1.28750864900923,
       "lng": 103.849223425142,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -3625,15 +3536,10 @@
       "lat": 1.3316086935084,
       "lng": 103.948546523933,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3668,15 +3574,10 @@
       "lat": 1.30572373922754,
       "lng": 103.82810604464,
       "lc": false,
+      "cuisines": [
+        "American"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -3711,11 +3612,10 @@
       "lat": 1.30408261868314,
       "lng": 103.8500313763,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -3746,15 +3646,13 @@
       "lat": 1.30083890839245,
       "lng": 103.839434733899,
       "lc": false,
+      "cuisines": [
+        "BBQ / Grill",
+        "Asian",
+        "Chinese",
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 20
-        },
-        {
-          "time": "20:00",
-          "discount": 20
-        },
         {
           "time": "20:30",
           "discount": 20
@@ -3781,11 +3679,10 @@
       "lat": 1.30587902361324,
       "lng": 103.829314888722,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
         {
           "time": "19:00",
           "discount": 20
@@ -3816,15 +3713,11 @@
       "lat": 1.27516997523174,
       "lng": 103.844496312645,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -3847,15 +3740,11 @@
       "lat": 1.30427053823352,
       "lng": 103.823912359581,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -3886,11 +3775,11 @@
       "lat": 1.30860852303326,
       "lng": 103.911476044156,
       "lc": false,
+      "cuisines": [
+        "European",
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -3912,7 +3801,7 @@
           "discount": 10
         }
       ],
-      "best_today": 50,
+      "best_today": 10,
       "error": null
     },
     {
@@ -3925,15 +3814,14 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Asian",
+        "International",
+        "Seafood",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -3964,6 +3852,12 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Buffet",
+        "Asian",
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
         {
           "time": "20:30",
@@ -3983,15 +3877,11 @@
       "lat": 1.32942533624577,
       "lng": 103.682841560649,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -4022,15 +3912,10 @@
       "lat": 1.29123960983988,
       "lng": 103.841280608041,
       "lc": false,
+      "cuisines": [
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -4065,15 +3950,10 @@
       "lat": 1.27588674266836,
       "lng": 103.845923793168,
       "lc": false,
+      "cuisines": [
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -4100,15 +3980,11 @@
       "lat": 1.29123960983988,
       "lng": 103.841280608041,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Omakase Sushi"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -4143,15 +4019,11 @@
       "lat": 1.27588674266836,
       "lng": 103.845923793168,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Omakase Sushi"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -4178,15 +4050,10 @@
       "lat": 1.27748817305035,
       "lng": 103.846222184202,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -4221,6 +4088,11 @@
       "lat": 1.29134759697794,
       "lng": 103.849989790085,
       "lc": false,
+      "cuisines": [
+        "Hong Kong Style Cafe",
+        "Chinese",
+        "Cantonese"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -4235,6 +4107,11 @@
       "lat": 1.30074770963916,
       "lng": 103.845047573431,
       "lc": false,
+      "cuisines": [
+        "Hong Kong Style Cafe",
+        "Chinese",
+        "Cantonese"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -4249,15 +4126,10 @@
       "lat": 1.28769285607795,
       "lng": 103.836160045113,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 35
-        },
-        {
-          "time": "19:00",
-          "discount": 35
-        },
         {
           "time": "19:30",
           "discount": 35
@@ -4292,15 +4164,15 @@
       "lat": 1.30394178690249,
       "lng": 103.851485335347,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Asian",
+        "Brunch",
+        "Cafe",
+        "Bistro",
+        "Seafood"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -4351,6 +4223,9 @@
       "lat": 1.27776783413012,
       "lng": 103.843811252735,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -4398,15 +4273,10 @@
       "lat": 1.33535677709911,
       "lng": 103.963892243026,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -4433,11 +4303,10 @@
       "lat": 1.28164940522818,
       "lng": 103.84580464965,
       "lc": true,
+      "cuisines": [
+        "French"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 30
-        },
         {
           "time": "20:00",
           "discount": 30
@@ -4464,15 +4333,10 @@
       "lat": 1.31386945443377,
       "lng": 103.828606363886,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -4503,15 +4367,11 @@
       "lat": 1.29349212700127,
       "lng": 103.841447839257,
       "lc": false,
+      "cuisines": [
+        "French",
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -4542,15 +4402,11 @@
       "lat": 1.27841779400742,
       "lng": 103.842845842075,
       "lc": false,
+      "cuisines": [
+        "French",
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -4581,6 +4437,9 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Bakery and Dessert"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -4595,15 +4454,12 @@
       "lat": 1.30274045226321,
       "lng": 103.85910255979,
       "lc": false,
+      "cuisines": [
+        "Mexican",
+        "Healthy Food",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -4634,15 +4490,10 @@
       "lat": 1.30064530196806,
       "lng": 103.849448612005,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -4693,15 +4544,11 @@
       "lat": 1.31166243791549,
       "lng": 103.794827685677,
       "lc": true,
+      "cuisines": [
+        "Italian",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -4732,15 +4579,12 @@
       "lat": 1.35202130773919,
       "lng": 103.860771976676,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -4767,15 +4611,13 @@
       "lat": 1.31142103107683,
       "lng": 103.856624019991,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Beverage Shop",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -4802,15 +4644,11 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -4849,15 +4687,10 @@
       "lat": 1.39127591953143,
       "lng": 103.850468725185,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -4884,15 +4717,10 @@
       "lat": 1.31641321892509,
       "lng": 103.757451263299,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -4923,15 +4751,10 @@
       "lat": 1.29308292249502,
       "lng": 103.768811035791,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -4966,15 +4789,10 @@
       "lat": 1.35530904178242,
       "lng": 103.887857183262,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -5001,15 +4819,10 @@
       "lat": 1.39758401246511,
       "lng": 103.818632141862,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -5036,15 +4849,10 @@
       "lat": 1.33303033228113,
       "lng": 103.790308540179,
       "lc": false,
+      "cuisines": [
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5079,15 +4887,10 @@
       "lat": 1.30113722227408,
       "lng": 103.85255950451,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -5110,15 +4913,11 @@
       "lat": 1.29479670956332,
       "lng": 103.852573366033,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5157,6 +4956,9 @@
       "lat": 1.28131239950476,
       "lng": 103.845719392391,
       "lc": true,
+      "cuisines": [
+        "Steakhouse"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -5184,11 +4986,10 @@
       "lat": 1.29008339576408,
       "lng": 103.839199219609,
       "lc": true,
+      "cuisines": [
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 30
-        },
         {
           "time": "20:00",
           "discount": 30
@@ -5215,11 +5016,10 @@
       "lat": 1.30625724130935,
       "lng": 103.787587170865,
       "lc": true,
+      "cuisines": [
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 30
-        },
         {
           "time": "20:00",
           "discount": 30
@@ -5246,15 +5046,11 @@
       "lat": 1.28563914231387,
       "lng": 103.846290272366,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -5281,15 +5077,16 @@
       "lat": 1.2876881970339,
       "lng": 103.849227340992,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Italian",
+        "Mexican",
+        "Shared Dishes",
+        "Pasta",
+        "Bars and pubs",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -5336,11 +5133,10 @@
       "lat": 1.33101780759102,
       "lng": 103.79627004348,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
         {
           "time": "19:00",
           "discount": 20
@@ -5371,15 +5167,19 @@
       "lat": 1.27492765838262,
       "lng": 103.843549530562,
       "lc": false,
+      "cuisines": [
+        "International",
+        "Bakery and Dessert",
+        "Beverage",
+        "Asian",
+        "Singaporean",
+        "Hotel Restaurant",
+        "Brunch",
+        "Bistro",
+        "Shared Dishes",
+        "Pasta"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5414,15 +5214,10 @@
       "lat": 1.30227912634395,
       "lng": 103.841101583104,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -5448,7 +5243,7 @@
           "discount": 15
         }
       ],
-      "best_today": 50,
+      "best_today": 15,
       "error": null
     },
     {
@@ -5461,11 +5256,10 @@
       "lat": 1.30502562565776,
       "lng": 103.832957478209,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -5484,15 +5278,10 @@
       "lat": 1.31881487007651,
       "lng": 103.892580778514,
       "lc": false,
+      "cuisines": [
+        "Thai"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5523,15 +5312,11 @@
       "lat": 1.29846963655747,
       "lng": 103.85486703715,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -5562,11 +5347,11 @@
       "lat": 1.27962668610529,
       "lng": 103.840007592937,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "20:00",
           "discount": 15
@@ -5585,15 +5370,10 @@
       "lat": 1.28292890896454,
       "lng": 103.844312814259,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -5644,15 +5424,11 @@
       "lat": 1.2877356412425,
       "lng": 103.849230114294,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -5699,15 +5475,10 @@
       "lat": 1.28019159651212,
       "lng": 103.847524087484,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -5738,13 +5509,12 @@
       "lat": null,
       "lng": null,
       "lc": false,
-      "slots": [
-        {
-          "time": "19:30",
-          "discount": 50
-        }
+      "cuisines": [
+        "Buffet",
+        "International"
       ],
-      "best_today": 50,
+      "slots": [],
+      "best_today": null,
       "error": null
     },
     {
@@ -5757,15 +5527,12 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot",
+        "Asian",
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -5812,15 +5579,12 @@
       "lat": 1.29928320721565,
       "lng": 103.849700824179,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Malaysian",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5851,15 +5615,13 @@
       "lat": 1.29846963655747,
       "lng": 103.85486703715,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Cantonese",
+        "Hotel Restaurant",
+        "Shared Dishes"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -5886,15 +5648,10 @@
       "lat": 1.28862298781294,
       "lng": 103.847963887836,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5925,15 +5682,11 @@
       "lat": 1.28755040643524,
       "lng": 103.849222925248,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -5984,15 +5737,11 @@
       "lat": 1.31079283198996,
       "lng": 103.872921335198,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -6035,15 +5784,10 @@
       "lat": 1.30125563185741,
       "lng": 103.859581352013,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -6082,11 +5826,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "American"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -6109,15 +5852,12 @@
       "lat": 1.31649147121141,
       "lng": 103.82657750527,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Western",
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -6148,15 +5888,10 @@
       "lat": 1.30771173944605,
       "lng": 103.834556167895,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -6191,15 +5926,11 @@
       "lat": 1.30739904535658,
       "lng": 103.829895253334,
       "lc": false,
+      "cuisines": [
+        "Mediterranean",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -6234,6 +5965,9 @@
       "lat": 1.29307884763132,
       "lng": 103.851261982149,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
         {
           "time": "19:30",
@@ -6265,15 +5999,10 @@
       "lat": 1.30652662558485,
       "lng": 103.852017142103,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -6316,7 +6045,19 @@
       "lat": 1.30074770963916,
       "lng": 103.845047573431,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
+        {
+          "time": "19:00",
+          "discount": 10
+        },
+        {
+          "time": "19:30",
+          "discount": 10
+        },
         {
           "time": "20:00",
           "discount": 20
@@ -6335,15 +6076,13 @@
       "lat": 1.30026689906653,
       "lng": 103.861865589801,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Asian",
+        "Bistro",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -6381,7 +6120,7 @@
           "discount": 15
         }
       ],
-      "best_today": 50,
+      "best_today": 30,
       "error": null
     },
     {
@@ -6394,15 +6133,11 @@
       "lat": 1.40866738257372,
       "lng": 103.867636615908,
       "lc": false,
+      "cuisines": [
+        "American",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -6433,15 +6168,12 @@
       "lat": 1.29793747849037,
       "lng": 103.850182257356,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Healthy Food",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -6476,15 +6208,12 @@
       "lat": 1.28988141540111,
       "lng": 103.812904069375,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Cafe",
+        "Bistro"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -6507,15 +6236,11 @@
       "lat": 1.30964603329964,
       "lng": 103.774586761471,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -6538,15 +6263,14 @@
       "lat": 1.353366860232,
       "lng": 103.878063138419,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Bakery and Dessert",
+        "Beverage",
+        "International",
+        "Cafe"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -6569,6 +6293,10 @@
       "lat": 1.33788663735454,
       "lng": 103.922648407766,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6616,6 +6344,9 @@
       "lat": 1.36103222148882,
       "lng": 103.748091419935,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6651,6 +6382,9 @@
       "lat": 1.28994618456452,
       "lng": 103.827679720482,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "19:30",
@@ -6670,6 +6404,9 @@
       "lat": 1.37517548118185,
       "lng": 103.881990913099,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "19:30",
@@ -6689,6 +6426,9 @@
       "lat": 1.34302644263059,
       "lng": 103.7381452862,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6716,6 +6456,9 @@
       "lat": 1.28744981772847,
       "lng": 103.81344506122,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6763,6 +6506,9 @@
       "lat": 1.44328204285332,
       "lng": 103.777294228046,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6810,6 +6556,9 @@
       "lat": 1.40800694944027,
       "lng": 103.899074357998,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "19:30",
@@ -6829,6 +6578,10 @@
       "lat": 1.33484485199233,
       "lng": 103.720462014216,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Chinese"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6876,6 +6629,9 @@
       "lat": 1.35436493799094,
       "lng": 103.960042188281,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6923,6 +6679,9 @@
       "lat": 1.38041525424501,
       "lng": 103.757295587899,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -6970,6 +6729,9 @@
       "lat": 1.33778337648439,
       "lng": 103.852507455855,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -7017,6 +6779,9 @@
       "lat": 1.42838936766158,
       "lng": 103.799188110149,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -7064,6 +6829,9 @@
       "lat": 1.41600486949205,
       "lng": 103.844251717032,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
         {
           "time": "20:00",
@@ -7111,6 +6879,9 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
         {
           "time": "21:00",
@@ -7138,11 +6909,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
         {
           "time": "19:00",
           "discount": 50
@@ -7169,15 +6939,10 @@
       "lat": 1.33135540758098,
       "lng": 103.806924856207,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -7203,7 +6968,7 @@
           "discount": 15
         }
       ],
-      "best_today": 30,
+      "best_today": 15,
       "error": null
     },
     {
@@ -7216,15 +6981,13 @@
       "lat": 1.30587902361324,
       "lng": 103.829314888722,
       "lc": false,
+      "cuisines": [
+        "Steakhouse",
+        "Buffet",
+        "International",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -7255,15 +7018,10 @@
       "lat": 1.31416383479813,
       "lng": 103.853905530109,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -7289,8 +7047,8 @@
       "error": null
     },
     {
-      "id": "8fded80bc835ff",
-      "name": "Paradise Biryani.SG @ Changi",
+      "id": "657e4cf7410b55",
+      "name": "Paradise Biryani.SG @ Bedok",
       "branch_id": "3384803013757",
       "eatigo_url": "https://eatigo.com/en/branches/3384803013757",
       "address": "16 Jln Pari Burong, Singapore 488682, Singapore",
@@ -7298,15 +7056,10 @@
       "lat": 1.33362024591178,
       "lng": 103.948330781116,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -7337,6 +7090,9 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -7351,15 +7107,10 @@
       "lat": 1.31641321892509,
       "lng": 103.757451263299,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -7385,7 +7136,7 @@
           "discount": 20
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -7398,15 +7149,10 @@
       "lat": 1.30376708827616,
       "lng": 103.789907619513,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -7429,15 +7175,11 @@
       "lat": 1.29185533273026,
       "lng": 103.85857808906,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 25
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -7468,15 +7210,10 @@
       "lat": 1.30782688672627,
       "lng": 103.903237013677,
       "lc": false,
+      "cuisines": [
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -7515,15 +7252,10 @@
       "lat": 1.27822949964567,
       "lng": 103.850812513482,
       "lc": false,
+      "cuisines": [
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -7562,15 +7294,12 @@
       "lat": 1.3053512123807,
       "lng": 103.78834737032,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Beverage",
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -7609,15 +7338,10 @@
       "lat": 1.29953466307853,
       "lng": 103.849728550018,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -7668,15 +7392,11 @@
       "lat": 1.35252737278519,
       "lng": 103.944698751072,
       "lc": false,
+      "cuisines": [
+        "Korean",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -7703,15 +7423,11 @@
       "lat": 1.29185533273026,
       "lng": 103.85857808906,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -7750,15 +7466,12 @@
       "lat": 1.28825972041875,
       "lng": 103.836657784125,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -7772,7 +7485,7 @@
           "discount": 40
         }
       ],
-      "best_today": 50,
+      "best_today": 40,
       "error": null
     },
     {
@@ -7785,11 +7498,13 @@
       "lat": 1.2865782667237,
       "lng": 103.84890194511,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Izakaya",
+        "Bistro",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -7832,11 +7547,12 @@
       "lat": 1.27679992796433,
       "lng": 103.845618295657,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "International",
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 50
-        },
         {
           "time": "20:00",
           "discount": 50
@@ -7855,15 +7571,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -7898,15 +7609,10 @@
       "lat": 1.29028193417518,
       "lng": 103.835147954372,
       "lc": false,
+      "cuisines": [
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 35
@@ -7941,15 +7647,11 @@
       "lat": 1.28650496109121,
       "lng": 103.849503429191,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -7996,11 +7698,10 @@
       "lat": 1.4110553473838,
       "lng": 103.844186136559,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -8031,15 +7732,11 @@
       "lat": 1.29960950187876,
       "lng": 103.853118508952,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -8066,15 +7763,10 @@
       "lat": 1.30427053823352,
       "lng": 103.823912359581,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8105,15 +7797,11 @@
       "lat": 1.3380258563727,
       "lng": 103.922835001967,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -8148,15 +7836,11 @@
       "lat": 1.28737381933187,
       "lng": 103.849226733912,
       "lc": false,
+      "cuisines": [
+        "Mediterranean",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -8174,7 +7858,7 @@
           "discount": 10
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -8187,15 +7871,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8234,11 +7913,10 @@
       "lat": 1.32473632812103,
       "lng": 103.929256259726,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -8257,11 +7935,10 @@
       "lat": 1.29911287475873,
       "lng": 103.855411173758,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -8280,11 +7957,10 @@
       "lat": 1.35466902496424,
       "lng": 103.830919782333,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -8303,15 +7979,14 @@
       "lat": 1.25212799954492,
       "lng": 103.822016584885,
       "lc": true,
+      "cuisines": [
+        "Buffet",
+        "Steakhouse",
+        "Asian",
+        "International",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8342,15 +8017,10 @@
       "lat": 1.29028193417518,
       "lng": 103.835147954372,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -8372,7 +8042,7 @@
           "discount": 30
         }
       ],
-      "best_today": 50,
+      "best_today": 30,
       "error": null
     },
     {
@@ -8385,15 +8055,10 @@
       "lat": 1.39205314156706,
       "lng": 103.89507054384,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8420,15 +8085,10 @@
       "lat": 1.33329334473462,
       "lng": 103.743278742341,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8455,15 +8115,10 @@
       "lat": 1.35076935257845,
       "lng": 103.872296143862,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8490,15 +8145,10 @@
       "lat": 1.42969848626288,
       "lng": 103.835776491468,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8525,15 +8175,10 @@
       "lat": 1.30074770963916,
       "lng": 103.845047573431,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8560,15 +8205,10 @@
       "lat": 1.35252737278519,
       "lng": 103.944698751072,
       "lc": false,
+      "cuisines": [
+        "Korean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8595,15 +8235,13 @@
       "lat": 1.3504812534505,
       "lng": 103.848760473211,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Healthy Food",
+        "Malaysian",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8626,15 +8264,12 @@
       "lat": 1.30118153061216,
       "lng": 103.857465501729,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Healthy Food",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -8657,15 +8292,10 @@
       "lat": 1.36525292408198,
       "lng": 103.865804231727,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 25
@@ -8700,11 +8330,11 @@
       "lat": 1.33369693334536,
       "lng": 103.897086652894,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -8731,6 +8361,9 @@
       "lat": 1.28540656780796,
       "lng": 103.850567541206,
       "lc": true,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -8745,6 +8378,9 @@
       "lat": 1.29962022781589,
       "lng": 103.860647265508,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -8759,15 +8395,11 @@
       "lat": 1.29185533273026,
       "lng": 103.85857808906,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 35
@@ -8786,15 +8418,11 @@
       "lat": 1.29960950187876,
       "lng": 103.853118508952,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -8825,15 +8453,11 @@
       "lat": 1.33083397482588,
       "lng": 103.948540099842,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8872,15 +8496,11 @@
       "lat": 1.31458704101474,
       "lng": 103.854098755166,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -8911,15 +8531,10 @@
       "lat": 1.30963586710115,
       "lng": 103.85216407321,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -8950,15 +8565,10 @@
       "lat": 1.29962022781589,
       "lng": 103.860647265508,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -8989,15 +8599,12 @@
       "lat": 1.28158729897675,
       "lng": 103.844645851239,
       "lc": false,
+      "cuisines": [
+        "Indian",
+        "Curry",
+        "Shared Dishes"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -9048,15 +8655,11 @@
       "lat": 1.30061437384276,
       "lng": 103.842228045431,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -9087,11 +8690,10 @@
       "lat": 1.31643963008359,
       "lng": 103.835487584433,
       "lc": true,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 20
-        },
         {
           "time": "20:00",
           "discount": 20
@@ -9118,11 +8720,10 @@
       "lat": 1.39711947947079,
       "lng": 103.872938802365,
       "lc": true,
+      "cuisines": [
+        "Italian"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 20
-        },
         {
           "time": "20:00",
           "discount": 20
@@ -9149,15 +8750,10 @@
       "lat": 1.29970279376036,
       "lng": 103.849887319583,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9195,7 +8791,7 @@
           "discount": 20
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -9208,15 +8804,10 @@
       "lat": 1.3316086935084,
       "lng": 103.948546523933,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9255,15 +8846,10 @@
       "lat": 1.30589957970697,
       "lng": 103.904526589872,
       "lc": false,
+      "cuisines": [
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9274,10 +8860,10 @@
         },
         {
           "time": "20:30",
-          "discount": 50
+          "discount": 30
         }
       ],
-      "best_today": 50,
+      "best_today": 30,
       "error": null
     },
     {
@@ -9290,15 +8876,12 @@
       "lat": 1.29307884763132,
       "lng": 103.851261982149,
       "lc": false,
+      "cuisines": [
+        "Steakhouse",
+        "Western",
+        "BBQ / Grill"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -9329,15 +8912,14 @@
       "lat": 1.29851332235749,
       "lng": 103.856115921745,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Singaporean",
+        "Seafood",
+        "Shared Dishes"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -9388,15 +8970,10 @@
       "lat": 1.28806315922683,
       "lng": 103.849230092662,
       "lc": false,
+      "cuisines": [
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9443,15 +9020,11 @@
       "lat": 1.29755506553528,
       "lng": 103.852228303832,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 55
@@ -9478,11 +9051,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 50
-        },
         {
           "time": "20:00",
           "discount": 50
@@ -9525,15 +9097,14 @@
       "lat": 1.29265080651399,
       "lng": 103.850216934055,
       "lc": false,
+      "cuisines": [
+        "European",
+        "Hotel Restaurant",
+        "Shared Dishes",
+        "Pasta",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9564,15 +9135,12 @@
       "lat": 1.29265080651399,
       "lng": 103.850216934055,
       "lc": true,
+      "cuisines": [
+        "European",
+        "International",
+        "Hotel Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 25
@@ -9599,15 +9167,11 @@
       "lat": 1.30227912634395,
       "lng": 103.841101583104,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9638,15 +9202,10 @@
       "lat": 1.36267450828024,
       "lng": 103.76417292006,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -9656,7 +9215,7 @@
           "discount": 10
         }
       ],
-      "best_today": 20,
+      "best_today": 10,
       "error": null
     },
     {
@@ -9669,15 +9228,10 @@
       "lat": 1.29709983994672,
       "lng": 103.852442334393,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -9720,15 +9274,10 @@
       "lat": 1.28792333388286,
       "lng": 103.849239743744,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -9771,11 +9320,10 @@
       "lat": 1.29674959280256,
       "lng": 103.85514042372,
       "lc": true,
+      "cuisines": [
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
         {
           "time": "20:00",
           "discount": 10
@@ -9798,11 +9346,10 @@
       "lat": 1.29008339576408,
       "lng": 103.839199219609,
       "lc": true,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 10
-        },
         {
           "time": "20:00",
           "discount": 30
@@ -9829,15 +9376,10 @@
       "lat": 1.30113722227408,
       "lng": 103.85255950451,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -9872,15 +9414,12 @@
       "lat": 1.29911287475873,
       "lng": 103.855411173758,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Seafood",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9911,15 +9450,12 @@
       "lat": 1.28004584254807,
       "lng": 103.847454529166,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Seafood",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 25
@@ -9950,15 +9486,11 @@
       "lat": 1.30135453209263,
       "lng": 103.858353066028,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Mediterranean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -9997,15 +9529,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -10036,15 +9563,10 @@
       "lat": 1.28937099358897,
       "lng": 103.836603810879,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -10075,15 +9597,10 @@
       "lat": 1.39040211480822,
       "lng": 103.98606107081,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -10114,15 +9631,11 @@
       "lat": 1.27368777727476,
       "lng": 103.845060205824,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 40
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -10153,15 +9666,10 @@
       "lat": 1.35466902496424,
       "lng": 103.830919782333,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -10184,11 +9692,11 @@
       "lat": 1.24615202701928,
       "lng": 103.842698514086,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -10223,11 +9731,11 @@
       "lat": 1.30197196437956,
       "lng": 103.857804288546,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 50
@@ -10262,15 +9770,14 @@
       "lat": 1.29846963655747,
       "lng": 103.85486703715,
       "lc": false,
+      "cuisines": [
+        "International",
+        "Bakery and Dessert",
+        "Asian",
+        "Hotel Restaurant",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -10309,15 +9816,11 @@
       "lat": 1.29028193417518,
       "lng": 103.835147954372,
       "lc": false,
+      "cuisines": [
+        "Cafe",
+        "Japanese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 35
@@ -10348,15 +9851,11 @@
       "lat": 1.30744253289071,
       "lng": 103.828776671636,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 40
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 40
@@ -10379,15 +9878,10 @@
       "lat": 1.33408359331373,
       "lng": 103.962946083391,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -10410,6 +9904,9 @@
       "lat": 1.2936577245386,
       "lng": 103.855081226245,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -10424,11 +9921,10 @@
       "lat": 1.33205485190481,
       "lng": 103.848507643079,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
         {
           "time": "19:00",
           "discount": 30
@@ -10447,15 +9943,10 @@
       "lat": 1.43514061477093,
       "lng": 103.785951871544,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -10482,15 +9973,10 @@
       "lat": 1.27013579015062,
       "lng": 103.81321468314,
       "lc": false,
+      "cuisines": [
+        "European"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -10513,15 +9999,10 @@
       "lat": 1.31372844002172,
       "lng": 103.877216398009,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -10572,15 +10053,12 @@
       "lat": 1.2865854142452,
       "lng": 103.849458654186,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -10631,11 +10109,10 @@
       "lat": 1.28825972041875,
       "lng": 103.836657784125,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "19:30",
-          "discount": 40
-        },
         {
           "time": "20:00",
           "discount": 40
@@ -10662,11 +10139,11 @@
       "lat": 1.28647356558562,
       "lng": 103.844588546607,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -10693,15 +10170,10 @@
       "lat": 1.28177471590875,
       "lng": 103.847805829412,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -10732,15 +10204,10 @@
       "lat": 1.32114652933088,
       "lng": 103.841550400671,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 40
-        },
         {
           "time": "19:30",
           "discount": 35
@@ -10775,15 +10242,11 @@
       "lat": 1.28622855041207,
       "lng": 103.853028067544,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -10810,6 +10273,9 @@
       "lat": 1.3168306104774,
       "lng": 103.84185948495,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -10824,6 +10290,10 @@
       "lat": 1.35422127854017,
       "lng": 103.721439265395,
       "lc": false,
+      "cuisines": [
+        "Cafe",
+        "Beverage"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -10838,15 +10308,12 @@
       "lat": 1.32379710581798,
       "lng": 103.85152766944,
       "lc": false,
+      "cuisines": [
+        "Thai",
+        "Beverage",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -10884,7 +10351,7 @@
           "discount": 20
         }
       ],
-      "best_today": 30,
+      "best_today": 20,
       "error": null
     },
     {
@@ -10897,15 +10364,10 @@
       "lat": 1.33519172033669,
       "lng": 103.8961641665,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -10936,15 +10398,14 @@
       "lat": 1.28292387532261,
       "lng": 103.846443478498,
       "lc": false,
+      "cuisines": [
+        "Beverage",
+        "Asian",
+        "Western",
+        "Beverage Shop",
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -10983,6 +10444,13 @@
       "lat": 1.33560515382458,
       "lng": 103.905601167337,
       "lc": false,
+      "cuisines": [
+        "Asian",
+        "Healthy Food",
+        "Mediterranean",
+        "Mexican",
+        "Cafe"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -10997,15 +10465,11 @@
       "lat": 1.28745612377699,
       "lng": 103.805414652014,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 30
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -11036,15 +10500,10 @@
       "lat": 1.33408359331373,
       "lng": 103.962946083391,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11079,15 +10538,12 @@
       "lat": 1.32019924927331,
       "lng": 103.969615863691,
       "lc": false,
+      "cuisines": [
+        "Western",
+        "Indian",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11122,15 +10578,12 @@
       "lat": 1.32702991607724,
       "lng": 103.846490872113,
       "lc": false,
+      "cuisines": [
+        "International",
+        "American",
+        "Western"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -11169,15 +10622,11 @@
       "lat": 1.29008339576408,
       "lng": 103.839199219609,
       "lc": false,
+      "cuisines": [
+        "Japanese",
+        "Steakhouse"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11208,15 +10657,10 @@
       "lat": 1.28769285607795,
       "lng": 103.836160045113,
       "lc": false,
+      "cuisines": [
+        "Bars and pubs"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 15
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -11247,15 +10691,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11282,6 +10721,9 @@
       "lat": 1.31247326486217,
       "lng": 103.853929522508,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -11296,15 +10738,13 @@
       "lat": 1.29936480411316,
       "lng": 103.848687419363,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot",
+        "Chinese",
+        "Buffet",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
-        {
-          "time": "19:00",
-          "discount": 50
-        },
         {
           "time": "19:30",
           "discount": 25
@@ -11339,11 +10779,11 @@
       "lat": 1.30227912634395,
       "lng": 103.841101583104,
       "lc": false,
+      "cuisines": [
+        "Buffet",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 50
-        },
         {
           "time": "19:00",
           "discount": 50
@@ -11382,11 +10822,10 @@
       "lat": 1.31386945443377,
       "lng": 103.828606363886,
       "lc": false,
+      "cuisines": [
+        "International"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 25
-        },
         {
           "time": "19:30",
           "discount": 15
@@ -11417,15 +10856,13 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Cantonese",
+        "Asian",
+        "Rice & Noodles Restaurant"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11456,15 +10893,12 @@
       "lat": 1.37759742308947,
       "lng": 103.772491526747,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Singaporean"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11495,15 +10929,13 @@
       "lat": 1.31641321892509,
       "lng": 103.757451263299,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "BBQ / Grill",
+        "Seafood"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11554,11 +10986,10 @@
       "lat": 1.27737235072298,
       "lng": 103.852844801266,
       "lc": false,
+      "cuisines": [
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -11577,15 +11008,10 @@
       "lat": 1.33240869141511,
       "lng": 103.884974293044,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11616,15 +11042,12 @@
       "lat": 1.40711830667484,
       "lng": 103.867607600386,
       "lc": false,
+      "cuisines": [
+        "European",
+        "Western",
+        "International"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11655,15 +11078,10 @@
       "lat": 1.32702991607724,
       "lng": 103.846490872113,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 40
-        },
-        {
-          "time": "19:00",
-          "discount": 30
-        },
         {
           "time": "19:30",
           "discount": 30
@@ -11694,11 +11112,10 @@
       "lat": 1.31284527511206,
       "lng": 103.82608396569,
       "lc": false,
+      "cuisines": [
+        "Indian"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -11725,15 +11142,10 @@
       "lat": 1.32699075133711,
       "lng": 103.847403697576,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11772,11 +11184,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
         {
           "time": "19:00",
           "discount": 10
@@ -11831,6 +11242,11 @@
       "lat": 1.28389391187559,
       "lng": 103.844903101499,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Steamboat / Hot Pot"
+      ],
       "slots": [],
       "best_today": null,
       "error": null
@@ -11845,15 +11261,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Buffet"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -11900,15 +11311,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 20
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -11951,15 +11357,10 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -11990,11 +11391,11 @@
       "lat": null,
       "lng": null,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian"
+      ],
       "slots": [
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
@@ -12025,15 +11426,10 @@
       "lat": 1.31379680571776,
       "lng": 103.859775931752,
       "lc": false,
+      "cuisines": [
+        "Steamboat / Hot Pot"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 10
-        },
-        {
-          "time": "19:00",
-          "discount": 10
-        },
         {
           "time": "19:30",
           "discount": 10
@@ -12072,15 +11468,13 @@
       "lat": 1.30413447820746,
       "lng": 103.860315034902,
       "lc": false,
+      "cuisines": [
+        "Chinese",
+        "Asian",
+        "Steamboat / Hot Pot",
+        "BBQ / Grill"
+      ],
       "slots": [
-        {
-          "time": "18:30",
-          "discount": 15
-        },
-        {
-          "time": "19:00",
-          "discount": 20
-        },
         {
           "time": "19:30",
           "discount": 20
