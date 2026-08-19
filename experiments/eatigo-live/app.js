@@ -8,7 +8,11 @@ function tooltip(r){
   return `<div class="slots"><strong>${esc(r.name)}</strong><br>${esc(r.address||'')}<br><br><strong>Today</strong><table>${rows}</table><br>Best remaining: <strong>${esc(r.best_today)}%</strong></div>`;
 }
 
-fetch('data/eatigo_today.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();}).then(data=>{
+const dataPromise = window.EATIGO_TODAY
+  ? Promise.resolve(window.EATIGO_TODAY)
+  : fetch('data/eatigo_today.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json();});
+
+dataPromise.then(data=>{
   const usable=(data.restaurants||[]).filter(r=>r.lat!=null&&r.lng!=null&&r.best_today!=null&&r.slots?.length);
   document.getElementById('status').textContent=`${usable.length} mapped live-discount samples · checked ${new Date(data.fetched_at).toLocaleString('en-SG',{timeZone:'Asia/Singapore'})} SGT`;
   const markers=[];
