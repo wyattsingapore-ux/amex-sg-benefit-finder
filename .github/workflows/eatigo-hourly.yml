@@ -16,6 +16,9 @@ concurrency:
 
 jobs:
   refresh-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -66,4 +69,5 @@ jobs:
         with:
           path: .
       - name: Deploy hourly Eatigo snapshot
+        id: deployment
         uses: actions/deploy-pages@v4
