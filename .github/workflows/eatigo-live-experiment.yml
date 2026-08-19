@@ -7,12 +7,14 @@ on:
       - experiment/eatigo-live-discounts
     paths:
       - 'scripts/experiment_eatigo_today.py'
+      - 'scripts/build_eatigo_live_preview.py'
       - 'tests/test_eatigo_today_experiment.py'
-      - 'experiments/eatigo-live/**'
+      - 'experiments/eatigo-live/index.html'
+      - 'experiments/eatigo-live/app.js'
       - '.github/workflows/eatigo-live-experiment.yml'
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -20,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: experiment/eatigo-live-discounts
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -52,18 +56,36 @@ jobs:
             gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo live discount experiment FAILED - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
             exit "$status"
           fi
+      - name: Build standalone browser preview
+        run: |
+          mkdir -p experiments/eatigo-live/data
+          cp data/eatigo_today.json experiments/eatigo-live/data/eatigo_today.json
+          python scripts/build_eatigo_live_preview.py
+      - name: Save latest preview back to experiment branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/eatigo-live/data/eatigo_today.json experiments/eatigo-live/preview.html
+          if git diff --cached --quiet; then
+            echo 'Preview data unchanged; nothing to commit.'
+          else
+            git commit -m "Update Eatigo live-discount experiment preview"
+            git push origin HEAD:experiment/eatigo-live-discounts
+          fi
+      - name: Report successful experiment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           {
             echo "Isolated Eatigo live-discount experiment SUCCEEDED in run $GITHUB_RUN_NUMBER."
             echo
             echo '```text'
             tail -n 80 eatigo-experiment.log
             echo '```'
+            echo
+            echo "Standalone browser preview was generated on the experiment branch."
           } > experiment-result.md
           gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo live discount experiment SUCCESS - run $GITHUB_RUN_NUMBER" --body-file experiment-result.md || true
-      - name: Build isolated prototype artifact
-        run: |
-          mkdir -p experiments/eatigo-live/data
-          cp data/eatigo_today.json experiments/eatigo-live/data/eatigo_today.json
       - uses: actions/upload-artifact@v4
         with:
           name: eatigo-live-discount-experiment
