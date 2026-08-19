@@ -1,7 +1,11 @@
 const SINGAPORE = [1.3521, 103.8198];
 let payload = { merchants: [], sources: {} };
-let userPos = null;
-let userMarker = null;
+let eatigoLive = { restaurants: [], cuisine_types: [] };
+let eatigoByBranch = new Map();
+let originPos = null;
+let originLabel = '';
+let originMarker = null;
+let originCircle = null;
 let markers = [];
 
 const map = L.map('map').setView(SINGAPORE, 11.25);
@@ -9,302 +13,84 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-
 const layer = L.layerGroup().addTo(map);
 const $ = id => document.getElementById(id);
+const touchLike = () => window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
 function esc(s) {
-  return String(s ?? '').replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]));
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function km(a,b){const R=6371,r=x=>x*Math.PI/180,d1=r(b[0]-a[0]),d2=r(b[1]-a[1]);const q=Math.sin(d1/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(d2/2)**2;return 2*R*Math.asin(Math.sqrt(q));}
+function modeIsEatigo(mode=$('benefitFilter').value){return mode==='eatigo'||mode==='eatigolc';}
+function modeMatch(m,x){if(x==='ld')return!!m.ld;if(x==='lc')return!!m.lc;if(x==='both')return!!m.ld&&!!m.lc;if(x==='gha')return!!m.gha;if(x==='ghalc')return!!m.gha&&!!m.lc;if(x==='eatigo')return!!m.eatigo;if(x==='eatigolc')return!!m.eatigo&&!!m.lc;return false;}
+function branchIdFor(m){return String(m.eatigo_branch_id||((m.eatigo_url||'').match(/\/branches\/(\d+)/)||[])[1]||'');}
+function liveFor(m){return eatigoByBranch.get(branchIdFor(m))||null;}
+function bucket(p){if(p>=50)return'best50';if(p>=40)return'best40';if(p>=30)return'best30';if(p>=20)return'best20';return'best10';}
+function mins(t){const [h,m]=String(t||'').split(':').map(Number);return Number.isFinite(h)&&Number.isFinite(m)?h*60+m:null;}
+function sgMinutesNow(){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Singapore',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());const h=Number(parts.find(x=>x.type==='hour')?.value||0),m=Number(parts.find(x=>x.type==='minute')?.value||0);return h*60+m;}
+function filteredLiveSlots(live){if(!live)return[];const mode=$('timeFilter').value,now=sgMinutesNow();return(live.slots||[]).filter(s=>{const m=mins(s.time);if(m==null)return false;if(mode==='next2')return m>=now&&m<=now+120;if(mode==='lunch')return m>=11*60&&m<=15*60;if(mode==='dinner')return m>=17*60&&m<=22*60;if(mode==='late')return m>=21*60;return true;});}
+function bestForSlots(slots){return slots.length?Math.max(...slots.map(s=>Number(s.discount)||0)):null;}
 
-function km(a, b) {
-  const R = 6371;
-  const r = x => x * Math.PI / 180;
-  const d1 = r(b[0] - a[0]);
-  const d2 = r(b[1] - a[1]);
-  const q = Math.sin(d1 / 2) ** 2 +
-    Math.cos(r(a[0])) * Math.cos(r(b[0])) * Math.sin(d2 / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(q));
-}
+const SEARCH_ALIASES={rd:'road',st:'street',ave:'avenue',av:'avenue',blvd:'boulevard',ctr:'centre',center:'centre',ctre:'centre',hwy:'highway',expwy:'expressway',jln:'jalan',lor:'lorong',bt:'bukit',upp:'upper',nth:'north',sth:'south'};
+function normalizeSearch(value){const s=String(value??'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').trim();return s.split(/\s+/).filter(Boolean).map(t=>SEARCH_ALIASES[t]||t).join(' ');}
+function merchantSearchValues(m){const values=[m.name,m.brand,m.gha_hotel,m.eatigo_location,m.address,m.postal_code,m.geocode_address,m.geocode_building,m.geocode_road,m.geocode_postal,m.hotel,m.mall,m.building,m.property,m.location,m.street,m.venue];for(const[key,value]of Object.entries(m)){if((typeof value==='string'||typeof value==='number')&&/(name|brand|address|postal|mall|hotel|building|property|location|street|road|venue|geocode)/i.test(key))values.push(value);}return[...new Set(values.filter(v=>v!==null&&v!==undefined&&String(v).trim()))];}
+function searchMatch(m,rawQuery){const raw=String(rawQuery??'').trim();if(!raw)return true;const values=merchantSearchValues(m),q=normalizeSearch(raw),tokens=q.split(/\s+/).filter(Boolean),index=normalizeSearch(values.join(' '));const qDigits=raw.replace(/\D/g,'');if(/^[\d\s#-]+$/.test(raw)&&qDigits.length>=4)return values.join(' ').replace(/\D/g,'').includes(qDigits);return tokens.every(token=>index.includes(token));}
 
-function modeMatch(m, x) {
-  if (x === 'ld') return !!m.ld;
-  if (x === 'lc') return !!m.lc;
-  if (x === 'both') return !!m.ld && !!m.lc;
-  if (x === 'gha') return !!m.gha;
-  if (x === 'ghalc') return !!m.gha && !!m.lc;
-  if (x === 'eatigo') return !!m.eatigo;
-  if (x === 'eatigolc') return !!m.eatigo && !!m.lc;
-  return false;
-}
-
-const SEARCH_ALIASES = {
-  rd: 'road', st: 'street', ave: 'avenue', av: 'avenue', blvd: 'boulevard',
-  ctr: 'centre', center: 'centre', ctre: 'centre', hwy: 'highway', expwy: 'expressway',
-  jln: 'jalan', lor: 'lorong', bt: 'bukit', upp: 'upper', nth: 'north', sth: 'south'
-};
-
-function normalizeSearch(value) {
-  const s = String(value ?? '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/&/g, ' and ')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-  return s.split(/\s+/).filter(Boolean).map(t => SEARCH_ALIASES[t] || t).join(' ');
-}
-
-function merchantSearchValues(m) {
-  const values = [
-    m.name, m.brand, m.gha_hotel, m.eatigo_location, m.address, m.postal_code,
-    m.geocode_address, m.geocode_building, m.geocode_road, m.geocode_postal,
-    m.hotel, m.mall, m.building, m.property, m.location, m.street, m.venue
-  ];
-
-  // Pick up future source-specific location fields without having to change the UI again.
-  for (const [key, value] of Object.entries(m)) {
-    if ((typeof value === 'string' || typeof value === 'number') &&
-        /(name|brand|address|postal|mall|hotel|building|property|location|street|road|venue|geocode)/i.test(key)) {
-      values.push(value);
-    }
+function current(){
+  const mode=$('benefitFilter').value,cat=$('categoryFilter').value,q=$('searchBox').value.trim(),bounds=map.getBounds();
+  const cuisine=$('cuisineFilter').value,minDiscount=Number($('discountFilter').value||0),radius=Number($('radiusFilter').value||0);
+  let rows=payload.merchants.filter(m=>modeMatch(m,mode)&&(cat==='all'||m.category===cat));
+  if(q)rows=rows.filter(m=>searchMatch(m,q));
+  rows=rows.map(m=>{const live=liveFor(m),slots=modeIsEatigo(mode)?filteredLiveSlots(live):[],best=bestForSlots(slots),distance=originPos&&m.lat!=null&&m.lng!=null?km(originPos,[Number(m.lat),Number(m.lng)]):null;return{...m,_live:live,_slots:slots,_best:best,_distance:distance};});
+  if(modeIsEatigo(mode)){
+    if(cuisine)rows=rows.filter(m=>(m._live?.cuisines||[]).includes(cuisine));
+    if($('timeFilter').value!=='all')rows=rows.filter(m=>m._slots.length);
+    if(minDiscount>0)rows=rows.filter(m=>(m._best||0)>=minDiscount);
   }
-  return [...new Set(values.filter(v => v !== null && v !== undefined && String(v).trim()))];
-}
-
-function searchMatch(m, rawQuery) {
-  const raw = String(rawQuery ?? '').trim();
-  if (!raw) return true;
-
-  const values = merchantSearchValues(m);
-  const q = normalizeSearch(raw);
-  const tokens = q.split(/\s+/).filter(Boolean);
-  const index = normalizeSearch(values.join(' '));
-
-  // Postal-code search should work with or without spaces/punctuation.
-  const qDigits = raw.replace(/\D/g, '');
-  if (/^[\d\s#-]+$/.test(raw) && qDigits.length >= 4) {
-    return values.join(' ').replace(/\D/g, '').includes(qDigits);
-  }
-
-  // Token matching allows e.g. "Suntec mall" or "Orchard Rd" even when
-  // the source contains extra words such as "Suntec City Mall" or "Orchard Road".
-  return tokens.every(token => index.includes(token));
-}
-
-function current() {
-  const mode = $('benefitFilter').value;
-  const cat = $('categoryFilter').value;
-  const q = $('searchBox').value.trim();
-  const bounds = map.getBounds();
-
-  let rows = payload.merchants.filter(m =>
-    modeMatch(m, mode) && (cat === 'all' || m.category === cat)
-  );
-
-  if (q) rows = rows.filter(m => searchMatch(m, q));
-
-  if ($('viewportOnly').checked) {
-    rows = rows.filter(m =>
-      m.lat != null && m.lng != null && bounds.contains([m.lat, m.lng])
-    );
-  }
-
-  rows = rows.map(m => ({
-    ...m,
-    _distance: userPos && m.lat != null && m.lng != null
-      ? km(userPos, [m.lat, m.lng]) : null
-  }));
-
-  if ($('sortOrder').value === 'nearest' && userPos) {
-    rows.sort((a, b) =>
-      (a._distance ?? 1e9) - (b._distance ?? 1e9) || a.name.localeCompare(b.name)
-    );
-  } else {
-    rows.sort((a, b) => a.name.localeCompare(b.name));
-  }
+  if(originPos&&radius>0)rows=rows.filter(m=>m._distance!=null&&m._distance<=radius);
+  if($('viewportOnly').checked)rows=rows.filter(m=>m.lat!=null&&m.lng!=null&&bounds.contains([m.lat,m.lng]));
+  if($('sortOrder').value==='nearest'&&originPos)rows.sort((a,b)=>(a._distance??1e9)-(b._distance??1e9)||a.name.localeCompare(b.name));else rows.sort((a,b)=>a.name.localeCompare(b.name));
   return rows;
 }
 
-function badges(m) {
-  const out = [];
-  if (m.ld && m.lc) out.push('<span class="badge both">LD + LC</span>');
-  else {
-    if (m.ld) out.push('<span class="badge ld">LOVE DINING</span>');
-    if (m.lc && !m.gha && !m.eatigo) out.push('<span class="badge lc">LIFESTYLE CREDIT</span>');
-  }
-  if (m.gha && m.lc) out.push('<span class="badge ghalc">GHA + LC</span>');
-  else if (m.gha) out.push('<span class="badge gha">GHA DINING</span>');
-  if (m.eatigo && m.lc) out.push('<span class="badge eatigolc">EATIGO + LC</span>');
-  else if (m.eatigo) out.push('<span class="badge eatigo">EATIGO</span>');
-  out.push(`<span class="badge cat">${esc(m.category.toUpperCase())}</span>`);
-  return out.join('');
+function badges(m){const out=[];if(m.ld&&m.lc)out.push('<span class="badge both">LD + LC</span>');else{if(m.ld)out.push('<span class="badge ld">LOVE DINING</span>');if(m.lc&&!m.gha&&!m.eatigo)out.push('<span class="badge lc">LIFESTYLE CREDIT</span>');}if(m.gha&&m.lc)out.push('<span class="badge ghalc">GHA + LC</span>');else if(m.gha)out.push('<span class="badge gha">GHA DINING</span>');if(m.eatigo&&m.lc)out.push('<span class="badge eatigolc">EATIGO + LC</span>');else if(m.eatigo)out.push('<span class="badge eatigo">EATIGO</span>');out.push(`<span class="badge cat">${esc(m.category.toUpperCase())}</span>`);return out.join('');}
+function ghaTierNote(m){if(!m.gha)return'';const t=m.gha_tiers||{silver:10,gold:15,platinum:20,titanium:25};return`<div class="gha-note"><strong>DISCOVERY dining:</strong> Silver ${t.silver}% · Gold ${t.gold}% · Platinum ${t.platinum}% · Titanium ${t.titanium}%</div>`;}
+function eatigoNote(m){if(!m.eatigo)return'';const live=m._live||liveFor(m);if(!live)return'<div class="eatigo-note"><strong>Eatigo:</strong> Listed on Eatigo. Current offer snapshot is temporarily unavailable; open Eatigo to check.</div>';const slots=m._slots?.length?m._slots:filteredLiveSlots(live),best=bestForSlots(slots),cuisines=(live.cuisines||[]).join(' · ');if(!slots.length)return`<div class="eatigo-note"><strong>Eatigo:</strong> No remaining matching slot was found in the latest snapshot today.${cuisines?`<small>${esc(cuisines)}</small>`:''}</div>`;const pills=slots.slice(0,6).map(s=>`<span class="slot">${esc(s.time)} · ${esc(s.discount)}%</span>`).join('');return`<div class="eatigo-note"><strong>Eatigo today:</strong> Best matching offer ${best}%<div class="slot-row">${pills}</div>${slots.length>6?`<small>+${slots.length-6} more times</small>`:''}${cuisines?`<small>${esc(cuisines)}</small>`:''}</div>`;}
+function benefitText(m){const b=[];if(m.ld)b.push('Love Dining');if(m.lc)b.push('Lifestyle Credit');if(m.gha)b.push('GHA / Pan Pacific DISCOVERY');if(m.eatigo)b.push('Eatigo');return b.join(' + ');}
+function tooltipForEatigo(m){const slots=m._slots||[],best=m._best;const rows=slots.map(s=>`<tr><td>${esc(s.time)}</td><td><strong>${esc(s.discount)}%</strong></td></tr>`).join('');const cuisine=(m._live?.cuisines||[]).join(' · ');const meta=[cuisine,m._distance!=null?`${m._distance.toFixed(m._distance<10?1:0)} km away`:null].filter(Boolean).join(' · ');return`<div class="slots-card"><div class="slots-head"><strong class="restaurant-name">${esc(m.name)}</strong><span class="best-chip">${esc(best)}%</span></div><div class="slot-address">${esc(m.address||'')}</div>${meta?`<div class="slot-meta">${esc(meta)}</div>`:''}<div class="slots-label">Today · matching times</div><div class="slots-scroll"><table>${rows}</table></div><div class="best-row">Best matching discount <strong>${esc(best)}%</strong></div></div>`;}
+function mobilePopupForEatigo(m){const slots=m._slots||[],best=m._best;const slotText=slots.slice(0,7).map(s=>`${esc(s.time)} ${esc(s.discount)}%`).join(' · ');return`<strong>${esc(m.name)}</strong><br>${esc(m.address)}${best!=null?`<br><strong>Best today: ${best}%</strong>`:''}${slotText?`<br><small>${slotText}</small>`:''}<br><a href="${esc(m.eatigo_url)}" target="_blank" rel="noopener">Open Eatigo ↗</a>`;}
+
+function updateNotice(rows){const banner=$('bootstrapBanner'),mode=$('benefitFilter').value;if(payload.bootstrap_lc_only){banner.classList.remove('hidden');banner.textContent='Bootstrap preview: Lifestyle Credit data is loaded, but Love Dining requires a live refresh.';return;}if(modeIsEatigo(mode)&&!eatigoLive.restaurants?.length){banner.classList.remove('hidden');banner.innerHTML='<strong>Eatigo live offer snapshot is unavailable.</strong> The restaurant list still works, but percentage pins and Eatigo offer filters are temporarily unavailable.';return;}if(rows.length&&markers.length<rows.length){banner.classList.remove('hidden');banner.innerHTML=`<strong>${markers.length} of ${rows.length} matching outlets are currently mapped.</strong> Unmapped outlets are still shown below.`;return;}banner.classList.add('hidden');banner.textContent='';}
+function listHintForMode(mode){if(mode==='both')return'Only outlets matched in both official AMEX sources at the same location.';if(mode==='gha')return'Singapore outlets on the official Pan Pacific DISCOVERY participating restaurant list.';if(mode==='ghalc')return'GHA dining outlets that also match an AMEX Lifestyle Credit outlet at the same location.';if(mode==='eatigo')return'Current Eatigo map pins show the best still-bookable discount found for today. Hover for times; click through to Eatigo to confirm/book.';if(mode==='eatigolc')return'Eatigo restaurants that also match Lifestyle Credit at the same location. Percentage pins use today’s latest Eatigo snapshot.';return'Results from the selected official merchant source.';}
+
+function updateOriginVisual(){if(originMarker){map.removeLayer(originMarker);originMarker=null;}if(originCircle){map.removeLayer(originCircle);originCircle=null;}if(!originPos)return;const icon=L.divIcon({className:'',html:'<div class="origin-pin"></div>',iconSize:[28,34],iconAnchor:[14,31]});originMarker=L.marker(originPos,{icon,zIndexOffset:3000}).addTo(map).bindPopup(`<strong>${esc(originLabel||'Search origin')}</strong>`);const radius=Number($('radiusFilter').value||0);if(radius>0)originCircle=L.circle(originPos,{radius:radius*1000,weight:2,fillOpacity:.05}).addTo(map);}
+function setOrigin(lat,lng,label){originPos=[Number(lat),Number(lng)];originLabel=label;$('radiusFilter').disabled=false;$('placeState').textContent=`Distance origin: ${label}`;$('sortOrder').value='nearest';updateOriginVisual();updateActiveFilters();render(true);}
+function clearOrigin(){originPos=null;originLabel='';$('radiusFilter').value='0';$('radiusFilter').disabled=true;$('placeState').textContent='Set a place or use your location to enable distance.';updateOriginVisual();updateActiveFilters();}
+async function setPlace(){const q=$('placeInput').value.trim();if(!q)return;$('placeState').textContent=`Finding “${q}”…`;$('placeBtn').disabled=true;try{const search=/singapore/i.test(q)?q:`${q}, Singapore`;const url=`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=sg&q=${encodeURIComponent(search)}`;const res=await fetch(url,{headers:{'Accept-Language':'en-SG,en;q=0.9'}});if(!res.ok)throw new Error(`location lookup ${res.status}`);const rows=await res.json();if(!rows.length)throw new Error('No Singapore location found');setOrigin(rows[0].lat,rows[0].lon,rows[0].display_name||q);}catch(err){$('placeState').textContent=`Could not find that location: ${err.message||err}`;}finally{$('placeBtn').disabled=false;}}
+function useMyLocation(){if(!navigator.geolocation)return alert('Geolocation is not supported by this browser.');$('locateBtn').disabled=true;navigator.geolocation.getCurrentPosition(pos=>{$('locateBtn').disabled=false;setOrigin(pos.coords.latitude,pos.coords.longitude,'My current location');map.setView(originPos,14);},err=>{$('locateBtn').disabled=false;alert('Location permission was not available: '+err.message);},{enableHighAccuracy:true,timeout:10000,maximumAge:60000});}
+
+function render(fit=false){
+  const rows=current();layer.clearLayers();markers=[];const eatigoMode=modeIsEatigo();
+  for(const m of rows){if(m.lat==null||m.lng==null)continue;let mk;if(eatigoMode&&m._best!=null&&m._slots.length){const p=Number(m._best),icon=L.divIcon({className:'',html:`<div class="discount-pin ${bucket(p)}">${p}%</div>`,iconSize:[52,34],iconAnchor:[26,17]});mk=L.marker([m.lat,m.lng],{icon});if(touchLike()){mk.bindPopup(mobilePopupForEatigo(m));}else{mk.bindTooltip(tooltipForEatigo(m),{direction:'auto',sticky:false,offset:[14,0],opacity:.99,className:'eatigo-slot-tooltip'});mk.on('mouseover',()=>mk.getElement()?.querySelector('.discount-pin')?.classList.add('hovered'));mk.on('mouseout',()=>mk.getElement()?.querySelector('.discount-pin')?.classList.remove('hovered'));mk.on('click',()=>window.open(m.eatigo_url,'_blank','noopener'));}}else if(eatigoMode){const icon=L.divIcon({className:'',html:'<div class="eatigo-generic-pin">E</div>',iconSize:[32,32],iconAnchor:[16,16]});mk=L.marker([m.lat,m.lng],{icon}).bindPopup(`<strong>${esc(m.name)}</strong><br>${esc(m.address)}<br><small>No remaining matching Eatigo slot in the latest snapshot.</small>${m.eatigo_url?`<br><a href="${esc(m.eatigo_url)}" target="_blank" rel="noopener">Open Eatigo ↗</a>`:''}`);}else{mk=L.circleMarker([m.lat,m.lng],{radius:7,weight:2,fillOpacity:.88}).bindPopup(`<strong>${esc(m.name)}</strong><br>${esc(m.address)}<br><small>${esc(benefitText(m))}</small>`);}mk.addTo(layer);markers.push(mk);}
+  $('resultCount').textContent=rows.length;$('mappedCount').textContent=markers.length;$('listHint').textContent=listHintForMode($('benefitFilter').value);
+  $('merchantList').innerHTML=rows.length?rows.map(m=>{const q=encodeURIComponent(`${m.name} ${m.address}`),brand=m.brand&&m.brand.toLowerCase()!==m.name.toLowerCase()?`<div class="brand">${esc(m.brand)}</div>`:'',eatigoLink=m.eatigo_url?`<a target="_blank" rel="noopener" href="${esc(m.eatigo_url)}">View on Eatigo ↗</a>`:'';return`<article class="merchant"><div class="badges">${badges(m)}</div><div><h3>${esc(m.name)}</h3>${brand}</div><div class="address">${esc(m.address)}</div>${ghaTierNote(m)}${eatigoNote(m)}<div class="merchant-actions"><div class="action-links">${eatigoLink}<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${q}">Maps ↗</a></div><span class="distance">${m._distance!=null?m._distance.toFixed(1)+' km':''}</span></div></article>`;}).join(''):'<div class="empty">No merchants match this filter. Try another benefit, distance, cuisine, offer filter or search term.</div>';
+  updateOriginVisual();updateNotice(rows);updateActiveFilters();if(fit&&markers.length){const fg=L.featureGroup(markers);map.fitBounds(fg.getBounds().pad(.15),{maxZoom:15});}setCompactMode();
 }
+function setCompactMode(){map.getContainer().classList.toggle('map-compact',map.getZoom()<=11.5);}
+map.on('zoomend',setCompactMode);
 
-function ghaTierNote(m) {
-  if (!m.gha) return '';
-  const t = m.gha_tiers || { silver: 10, gold: 15, platinum: 20, titanium: 25 };
-  return `<div class="gha-note"><strong>DISCOVERY dining:</strong> Silver ${t.silver}% · Gold ${t.gold}% · Platinum ${t.platinum}% · Titanium ${t.titanium}%</div>`;
-}
+function populateCuisine(){const sel=$('cuisineFilter'),current=sel.value;sel.innerHTML='<option value="">All cuisines</option>';for(const item of(eatigoLive.cuisine_types||[])){if(!item?.name)continue;const o=document.createElement('option');o.value=item.name;o.textContent=`${item.name} (${item.count})`;sel.appendChild(o);}if([...sel.options].some(o=>o.value===current))sel.value=current;}
+function refreshFilterAvailability(){const eatigoMode=modeIsEatigo();$('eatigoFilterSection').classList.toggle('hidden',!eatigoMode);const hasLive=!!eatigoLive.restaurants?.length;$('discountFilter').disabled=!eatigoMode||!hasLive;$('timeFilter').disabled=!eatigoMode||!hasLive;$('cuisineFilter').disabled=!eatigoMode||!eatigoLive.restaurants_with_cuisine;$('cuisineHint').textContent=eatigoMode?(eatigoLive.restaurants_with_cuisine?`Cuisine data from Eatigo for ${eatigoLive.restaurants_with_cuisine} outlets.`:'Cuisine data unavailable in the current Eatigo snapshot.'):'Cuisine filtering will appear here when the selected programme provides reliable cuisine data.';if(eatigoMode){if(hasLive&&eatigoLive.fetched_at){const dt=new Date(eatigoLive.fetched_at);$('eatigoFreshness').textContent=`Eatigo offers checked ${dt.toLocaleString('en-SG',{timeZone:'Asia/Singapore'})} SGT · availability can change; confirm on Eatigo.`;}else $('eatigoFreshness').textContent='Current Eatigo offer snapshot unavailable.';}}
+function activeFilterItems(){const items=[];if(modeIsEatigo()&&$('cuisineFilter').value)items.push({key:'cuisine',label:$('cuisineFilter').value});if(originPos&&Number($('radiusFilter').value)>0)items.push({key:'radius',label:`≤${$('radiusFilter').value} km from ${originLabel||'location'}`});if(modeIsEatigo()&&Number($('discountFilter').value)>0)items.push({key:'discount',label:`${$('discountFilter').value}%+ Eatigo`});if(modeIsEatigo()&&$('timeFilter').value!=='all')items.push({key:'time',label:$('timeFilter').selectedOptions[0].textContent});return items;}
+function updateActiveFilters(){const items=activeFilterItems();$('activeFilters').innerHTML=items.map(x=>`<button class="filter-chip" type="button" data-clear="${esc(x.key)}">${esc(x.label)} ×</button>`).join('');$('filterCount').textContent=items.length;$('filterCount').classList.toggle('hidden',!items.length);}
+function clearFilter(key){if(key==='cuisine')$('cuisineFilter').value='';if(key==='radius')clearOrigin();if(key==='discount')$('discountFilter').value='0';if(key==='time')$('timeFilter').value='all';render(true);}
+function openFilters(){if(window.innerWidth>700)return;$('filtersPanel').classList.add('open');$('filterOverlay').classList.remove('hidden');document.body.classList.add('filters-open');}
+function closeFilters(){$('filtersPanel').classList.remove('open');$('filterOverlay').classList.add('hidden');document.body.classList.remove('filters-open');}
+function resetFilters(){$('cuisineFilter').value='';$('discountFilter').value='0';$('timeFilter').value='all';$('placeInput').value='';clearOrigin();render(true);}
 
-function eatigoNote(m) {
-  if (!m.eatigo) return '';
-  return '<div class="eatigo-note"><strong>Eatigo:</strong> Listed on Eatigo. Open Eatigo to check the current available times and discount.</div>';
-}
+async function load(){try{const merchantReq=fetch('data/merchants.json',{cache:'no-store'});const eatigoReq=fetch('data/eatigo_today.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);const r=await merchantReq;if(!r.ok)throw new Error(r.status);payload=await r.json();eatigoLive=(await eatigoReq)||{restaurants:[],cuisine_types:[]};eatigoByBranch=new Map((eatigoLive.restaurants||[]).filter(x=>x.branch_id).map(x=>[String(x.branch_id),x]));populateCuisine();refreshFilterAvailability();const dt=payload.generated_at?new Date(payload.generated_at):null;$('updated').textContent=dt?`Merchant data refreshed ${dt.toLocaleString('en-SG',{timeZone:'Asia/Singapore'})} SGT`:'Merchant data has not been refreshed yet';$('ldHotelsSource').href=payload.sources.love_dining_hotels||'#';$('ldRestaurantsSource').href=payload.sources.love_dining_restaurants||'#';$('lcSource').href=payload.sources.lifestyle_credit_pdf||'#';$('ghaSource').href=payload.sources.gha_dining||'https://www.panpacific.com/en/dining/pphg-fb.html';$('eatigoSource').href=payload.sources.eatigo||'https://eatigo.com/en/regions/27/search';if(payload.bootstrap_lc_only)$('benefitFilter').value='lc';refreshFilterAvailability();render(true);}catch(e){$('merchantList').innerHTML='<div class="empty">Could not load merchant data.</div>';$('updated').textContent='Merchant data unavailable';console.error(e);}}
 
-function benefitText(m) {
-  const b = [];
-  if (m.ld) b.push('Love Dining');
-  if (m.lc) b.push('Lifestyle Credit');
-  if (m.gha) b.push('GHA / Pan Pacific DISCOVERY');
-  if (m.eatigo) b.push('Eatigo');
-  return b.join(' + ');
-}
-
-function updateNotice(rows) {
-  const banner = $('bootstrapBanner');
-  const mode = $('benefitFilter').value;
-  if (payload.bootstrap_lc_only) {
-    banner.classList.remove('hidden');
-    banner.textContent = 'Bootstrap preview: Lifestyle Credit data is loaded, but Love Dining requires a live refresh.';
-    return;
-  }
-  if (mode === 'eatigo' && rows.length && markers.length < rows.length) {
-    banner.classList.remove('hidden');
-    banner.innerHTML = `<strong>${markers.length} of ${rows.length} Eatigo restaurants are mapped.</strong> Any unmapped outlet is still shown in the list below.`;
-    return;
-  }
-  if (rows.length && markers.length === 0) {
-    banner.classList.remove('hidden');
-    banner.innerHTML = `<strong>${rows.length} merchants matched, but map coordinates are not available yet.</strong> The merchant list is still available below the map.`;
-    return;
-  }
-  if (rows.length && markers.length < rows.length) {
-    banner.classList.remove('hidden');
-    banner.innerHTML = `<strong>${markers.length} of ${rows.length} matching outlets are currently mapped.</strong> Unmapped outlets are still shown below.`;
-    return;
-  }
-  banner.classList.add('hidden');
-  banner.textContent = '';
-}
-
-function listHintForMode(mode) {
-  if (mode === 'both') return 'Only outlets matched in both official AMEX sources at the same location.';
-  if (mode === 'gha') return 'Singapore outlets on the official Pan Pacific DISCOVERY participating restaurant list.';
-  if (mode === 'ghalc') return 'GHA dining outlets that also match an AMEX Lifestyle Credit outlet at the same location.';
-  if (mode === 'eatigo') return 'Restaurants listed on Eatigo Singapore. Open Eatigo to check the current discount and booking time.';
-  if (mode === 'eatigolc') return 'Eatigo restaurants that also match an AMEX Lifestyle Credit dining outlet at the same location. Open Eatigo to check the current offer.';
-  return 'Results from the selected official merchant source.';
-}
-
-function render(fit = false) {
-  const rows = current();
-  layer.clearLayers();
-  markers = [];
-
-  for (const m of rows) {
-    if (m.lat == null || m.lng == null) continue;
-    const mk = L.circleMarker([m.lat, m.lng], { radius: 7, weight: 2, fillOpacity: .88 })
-      .bindPopup(`<strong>${esc(m.name)}</strong><br>${esc(m.address)}<br><small>${esc(benefitText(m))}</small>`);
-    mk.addTo(layer);
-    markers.push(mk);
-  }
-
-  $('resultCount').textContent = rows.length;
-  $('mappedCount').textContent = markers.length;
-  $('listHint').textContent = listHintForMode($('benefitFilter').value);
-
-  $('merchantList').innerHTML = rows.length
-    ? rows.map(m => {
-        const q = encodeURIComponent(`${m.name} ${m.address}`);
-        const brand = m.brand && m.brand.toLowerCase() !== m.name.toLowerCase()
-          ? `<div class="brand">${esc(m.brand)}</div>` : '';
-        const eatigoLink = m.eatigo_url
-          ? `<a target="_blank" rel="noopener" href="${esc(m.eatigo_url)}">View on Eatigo ↗</a>` : '';
-        return `<article class="merchant">
-          <div class="badges">${badges(m)}</div>
-          <div><h3>${esc(m.name)}</h3>${brand}</div>
-          <div class="address">${esc(m.address)}</div>
-          ${ghaTierNote(m)}
-          ${eatigoNote(m)}
-          <div class="merchant-actions">
-            <div class="action-links">${eatigoLink}<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${q}">Maps ↗</a></div>
-            <span class="distance">${m._distance != null ? m._distance.toFixed(1) + ' km' : ''}</span>
-          </div>
-        </article>`;
-      }).join('')
-    : '<div class="empty">No merchants match this filter. Try another benefit, category or search term.</div>';
-
-  updateNotice(rows);
-  if (fit && markers.length) {
-    const fg = L.featureGroup(markers);
-    map.fitBounds(fg.getBounds().pad(.15), { maxZoom: 15 });
-  }
-}
-
-async function load() {
-  try {
-    const r = await fetch('data/merchants.json', { cache: 'no-store' });
-    if (!r.ok) throw new Error(r.status);
-    payload = await r.json();
-    const dt = payload.generated_at ? new Date(payload.generated_at) : null;
-    $('updated').textContent = dt
-      ? `Data refreshed ${dt.toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })} SGT`
-      : 'Data has not been refreshed yet';
-    $('ldHotelsSource').href = payload.sources.love_dining_hotels || '#';
-    $('ldRestaurantsSource').href = payload.sources.love_dining_restaurants || '#';
-    $('lcSource').href = payload.sources.lifestyle_credit_pdf || '#';
-    $('ghaSource').href = payload.sources.gha_dining || 'https://www.panpacific.com/en/dining/pphg-fb.html';
-    $('eatigoSource').href = payload.sources.eatigo || 'https://eatigo.com/en/regions/27/search';
-    if (payload.bootstrap_lc_only) $('benefitFilter').value = 'lc';
-    render(true);
-  } catch (e) {
-    $('merchantList').innerHTML = '<div class="empty">Could not load merchant data. Run the refresh script first.</div>';
-    $('updated').textContent = 'Merchant data unavailable';
-    console.error(e);
-  }
-}
-
-$('benefitFilter').addEventListener('change', () => {
-  const mode = $('benefitFilter').value;
-  if (['gha', 'ghalc', 'eatigo', 'eatigolc'].includes(mode)) $('categoryFilter').value = 'dining';
-  else if (mode !== 'lc') $('categoryFilter').value = 'all';
-  render(true);
-});
-$('categoryFilter').addEventListener('change', () => render(true));
-$('searchBox').addEventListener('input', () => render(false));
-$('searchBox').addEventListener('keydown', e => { if (e.key === 'Enter') render(true); });
-$('findBtn').addEventListener('click', () => render(true));
-$('sortOrder').addEventListener('change', () => render(false));
-$('viewportOnly').addEventListener('change', () => render(false));
-map.on('moveend', () => { if ($('viewportOnly').checked) render(false); });
-
-$('locateBtn').addEventListener('click', () => {
-  if (!navigator.geolocation) return alert('Geolocation is not supported by this browser.');
-  navigator.geolocation.getCurrentPosition(pos => {
-    userPos = [pos.coords.latitude, pos.coords.longitude];
-
-    if (userMarker) map.removeLayer(userMarker);
-    const userIcon = L.divIcon({
-      className: '',
-      html: '<div style="width:28px;height:28px;background:#ff3b30;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 8px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center"><div style="width:8px;height:8px;background:#fff;border-radius:50%"></div></div>',
-      iconSize: [34, 42],
-      iconAnchor: [17, 39],
-      popupAnchor: [0, -35]
-    });
-    userMarker = L.marker(userPos, { icon: userIcon, zIndexOffset: 1000 })
-      .addTo(map)
-      .bindPopup('<strong>You are here</strong>')
-      .openPopup();
-
-    map.setView(userPos, 14);
-    $('sortOrder').value = 'nearest';
-    render(false);
-  }, err => alert('Location permission was not available: ' + err.message), {
-    enableHighAccuracy: true, timeout: 10000
-  });
-});
-
+$('benefitFilter').addEventListener('change',()=>{const mode=$('benefitFilter').value;if(['gha','ghalc','eatigo','eatigolc'].includes(mode))$('categoryFilter').value='dining';else if(mode!=='lc')$('categoryFilter').value='all';refreshFilterAvailability();render(true);});
+$('categoryFilter').addEventListener('change',()=>render(true));$('searchBox').addEventListener('input',()=>render(false));$('searchBox').addEventListener('keydown',e=>{if(e.key==='Enter')render(true);});$('findBtn').addEventListener('click',()=>render(true));$('sortOrder').addEventListener('change',()=>render(false));$('viewportOnly').addEventListener('change',()=>render(false));map.on('moveend',()=>{if($('viewportOnly').checked)render(false);});
+for(const id of['cuisineFilter','discountFilter','timeFilter'])$(id).addEventListener('change',()=>render(true));$('radiusFilter').addEventListener('change',()=>{updateOriginVisual();render(true);});$('placeBtn').addEventListener('click',setPlace);$('placeInput').addEventListener('keydown',e=>{if(e.key==='Enter')setPlace();});$('locateBtn').addEventListener('click',useMyLocation);$('resetFilters').addEventListener('click',resetFilters);$('filterToggle').addEventListener('click',openFilters);$('filterClose').addEventListener('click',closeFilters);$('applyFilters').addEventListener('click',closeFilters);$('filterOverlay').addEventListener('click',closeFilters);$('activeFilters').addEventListener('click',e=>{const b=e.target.closest('[data-clear]');if(b)clearFilter(b.dataset.clear);});window.addEventListener('resize',()=>{if(window.innerWidth>700)closeFilters();});
 load();

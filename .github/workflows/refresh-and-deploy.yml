@@ -1,4 +1,4 @@
-name: Refresh AMEX + GHA + Eatigo data and deploy Pages
+name: Refresh dining data and deploy Pages
 
 on:
   workflow_dispatch:
@@ -20,14 +20,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
 
-      - name: Preserve last-known-good merchant data
+      - name: Preserve current live datasets as fallbacks
         run: |
-          if [ -f data/merchants.json ]; then
-            cp data/merchants.json "$RUNNER_TEMP/merchants-last-good.json"
-          fi
+          mkdir -p data
+          owner="$(printf '%s' "$GITHUB_REPOSITORY_OWNER" | tr '[:upper:]' '[:lower:]')"
+          repo="${GITHUB_REPOSITORY#*/}"
+          base="https://${owner}.github.io/${repo}"
+          curl --fail --location --retry 3 --retry-delay 2 "$base/data/merchants.json" --output "$RUNNER_TEMP/merchants-last-good.json" || true
+          curl --fail --location --retry 2 "$base/data/eatigo_today.json" --output "$RUNNER_TEMP/eatigo-today-last-good.json" || true
 
       - uses: actions/setup-python@v5
         with:
@@ -42,25 +46,8 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
-      - name: Install Chromium for Eatigo pagination (best effort)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set +e
-          python -m playwright install --with-deps chromium 2>&1 | tee chromium-install.log
-          status=${PIPESTATUS[0]}
-          set -e
-          if [ "$status" -ne 0 ]; then
-            {
-              echo "Automated diagnostic from GitHub Actions run $GITHUB_RUN_NUMBER."
-              echo
-              echo '```text'
-              tail -n 220 chromium-install.log
-              echo '```'
-            } > chromium-failure.md
-            gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo Chromium setup failure - run $GITHUB_RUN_NUMBER" --body-file chromium-failure.md || true
-            echo "::warning::Chromium setup failed. The site will still deploy using last-known-good merchant data."
-          fi
+      - name: Install Chromium for Eatigo directory discovery
+        run: python -m playwright install --with-deps chromium
 
       - name: Restore OneMap and Eatigo caches
         uses: actions/cache@v4
@@ -74,54 +61,39 @@ jobs:
             dining-data-caches-
             onemap-geocodes-
 
-      - name: Refresh merchant data transactionally
+      - name: Refresh AMEX, GHA and Eatigo directory data
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set +e
           data_ok=1
-
-          python -m scripts.refresh_data_fixed
-          if [ "$?" -ne 0 ]; then
-            echo "::warning::AMEX refresh failed; reverting to last-known-good merchant data."
-            data_ok=0
-          fi
-
+          python -m scripts.refresh_data_fixed || data_ok=0
+          if [ "$data_ok" -eq 1 ]; then python -m scripts.augment_gha || data_ok=0; fi
           if [ "$data_ok" -eq 1 ]; then
-            python -m scripts.augment_gha
-            if [ "$?" -ne 0 ]; then
-              echo "::warning::GHA refresh failed; reverting to last-known-good merchant data."
+            python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-directory.log
+            status=${PIPESTATUS[0]}
+            if [ "$status" -ne 0 ]; then
               data_ok=0
-            fi
-          fi
-
-          if [ "$data_ok" -eq 1 ]; then
-            python -m scripts.augment_eatigo_resilient_v2 2>&1 | tee eatigo-run.log
-            eatigo_status=${PIPESTATUS[0]}
-            if [ "$eatigo_status" -ne 0 ]; then
               {
                 echo "Automated diagnostic from GitHub Actions run $GITHUB_RUN_NUMBER."
                 echo
                 echo '```text'
-                tail -n 220 eatigo-run.log
+                tail -n 260 eatigo-directory.log
                 echo '```'
               } > eatigo-failure.md
-              gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo refresh failure - run $GITHUB_RUN_NUMBER" --body-file eatigo-failure.md || true
-              echo "::warning::Eatigo refresh failed; reverting to last-known-good merchant data so UI changes can still deploy."
-              data_ok=0
-            fi
-          fi
-
-          if [ "$data_ok" -ne 1 ]; then
-            if [ -f "$RUNNER_TEMP/merchants-last-good.json" ]; then
-              cp "$RUNNER_TEMP/merchants-last-good.json" data/merchants.json
-              echo "Restored last-known-good data/merchants.json."
-            else
-              echo "::error::No last-known-good merchant dataset is available."
-              exit 1
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "Eatigo directory refresh failure - run $GITHUB_RUN_NUMBER" --body-file eatigo-failure.md || true
             fi
           fi
           set -e
+          if [ "$data_ok" -ne 1 ]; then
+            if [ -s "$RUNNER_TEMP/merchants-last-good.json" ]; then
+              cp "$RUNNER_TEMP/merchants-last-good.json" data/merchants.json
+              echo "Using current live merchant dataset as fallback."
+            else
+              echo "::error::Merchant refresh failed and no live fallback exists."
+              exit 1
+            fi
+          fi
 
       - name: Verify OneMap repository secrets
         env:
@@ -129,10 +101,9 @@ jobs:
           ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
         run: |
           if [ -z "$ONEMAP_API_EMAIL" ] || [ -z "$ONEMAP_API_PASSWORD" ]; then
-            echo "::error::OneMap credentials are not available to the build job. Add ONEMAP_API_EMAIL and ONEMAP_API_PASSWORD under Settings > Secrets and variables > Actions > Repository secrets."
+            echo "::error::OneMap credentials are not available to the build job."
             exit 1
           fi
-          echo "OneMap repository secrets are available to the build job."
 
       - name: Geocode with OneMap
         env:
@@ -140,17 +111,38 @@ jobs:
           ONEMAP_API_PASSWORD: ${{ secrets.ONEMAP_API_PASSWORD }}
         run: python scripts/geocode.py
 
-      - name: Verify mapped merchant coordinates
+      - name: Refresh today's Eatigo offers and cuisines
+        run: |
+          set +e
+          python scripts/refresh_eatigo_today.py --limit 0 --workers 8 2>&1 | tee eatigo-today.log
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            if [ -s "$RUNNER_TEMP/eatigo-today-last-good.json" ]; then
+              cp "$RUNNER_TEMP/eatigo-today-last-good.json" data/eatigo_today.json
+              echo "::warning::Eatigo offer refresh failed; using previous live snapshot."
+            else
+              echo "::error::Eatigo offer refresh failed and no previous snapshot exists."
+              exit "$status"
+            fi
+          fi
+
+      - name: Verify production datasets
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          payload = json.loads(Path('data/merchants.json').read_text(encoding='utf-8'))
-          merchants = payload.get('merchants', [])
+          merchants = json.loads(Path('data/merchants.json').read_text(encoding='utf-8')).get('merchants', [])
           mapped = sum(m.get('lat') is not None and m.get('lng') is not None for m in merchants)
-          print(f'Mapped merchants: {mapped}/{len(merchants)}')
+          eatigo = [m for m in merchants if m.get('eatigo') and m.get('eatigo_url')]
+          live = json.loads(Path('data/eatigo_today.json').read_text(encoding='utf-8'))
+          print(f'merchants={len(merchants)} mapped={mapped} eatigo={len(eatigo)} live_attempted={live.get("restaurants_attempted")}')
           if mapped == 0:
-              raise SystemExit('Geocoding produced zero mapped merchants; refusing to deploy an empty map.')
+              raise SystemExit('Geocoding produced zero mapped merchants')
+          if len(eatigo) < 200:
+              raise SystemExit(f'Production Eatigo directory too small: {len(eatigo)}')
+          if int(live.get('restaurants_attempted') or 0) < 200:
+              raise SystemExit('Eatigo live snapshot did not cover the full directory')
           PY
 
       - run: python scripts/validate_data.py
