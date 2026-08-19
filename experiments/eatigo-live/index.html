@@ -6,25 +6,43 @@
   <title>Eatigo Live Discount Experiment</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <style>
-    body{margin:0;background:#071426;color:#f5f8fc;font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
-    header{padding:18px 22px;background:#0d2039}h1{font-size:22px;margin:0 0 4px}.muted{color:#9fb2ca}
-    .bar{padding:12px 22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.map{height:70vh}.legend{font-size:13px}.status{font-weight:700}
+    *{box-sizing:border-box}body{margin:0;background:#071426;color:#f5f8fc;font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+    header{padding:16px 20px;background:#0d2039}h1{font-size:22px;margin:0 0 4px}.muted{color:#9fb2ca}
+    .filters{padding:12px 16px;background:#091a2d;border-bottom:1px solid #29445f;display:grid;grid-template-columns:repeat(4,minmax(145px,1fr));gap:9px 10px;align-items:end}
+    .filter{min-width:0}.filter label{display:block;color:#9fb2ca;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.055em;margin:0 0 4px}
+    select,input,button{width:100%;height:38px;border:1px solid #375773;border-radius:8px;background:#102b49;color:#fff;padding:0 10px;font:inherit;outline:none}
+    select:focus,input:focus,button:focus{border-color:#80bfff;box-shadow:0 0 0 2px rgba(128,191,255,.18)}button{cursor:pointer;font-weight:750}button:hover{background:#163858}
+    .location-group{grid-column:span 2;display:grid;grid-template-columns:minmax(160px,1fr) 105px 125px;gap:7px}.location-group label{grid-column:1/-1}
+    .filter-actions{display:flex;gap:7px}.filter-actions button{min-width:92px}.reset{background:#172333}.location-state{grid-column:1/-1;color:#9fb2ca;font-size:12px;min-height:18px}
+    .bar{padding:9px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#071426}.map{height:calc(100vh - 235px);min-height:420px}.legend{font-size:12px;color:#9fb2ca}.status{font-weight:750;font-size:13px}
     .discount-pin{display:flex;align-items:center;justify-content:center;min-width:44px;height:30px;padding:0 6px;border-radius:16px;background:#0b1d33;border:2px solid #fff;color:#fff;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.45);transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease}
     .discount-pin.hovered{transform:scale(1.22);border-color:#ffe86b;box-shadow:0 0 0 3px rgba(255,232,107,.25),0 4px 12px rgba(0,0,0,.55)}
     .discount-pin.best50{background:#8a1f11}.discount-pin.best40{background:#a24c14}.discount-pin.best30{background:#8b6d12}.discount-pin.best20{background:#1b6688}.discount-pin.best10{background:#42566a}
+    .map-compact .discount-pin{min-width:36px;height:25px;padding:0 5px;font-size:12px;border-width:1.5px}.map-compact .leaflet-marker-icon{margin-top:4px!important}
+    .origin-pin{width:24px;height:24px;background:#ff3b30;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 8px rgba(0,0,0,.5);position:relative}.origin-pin:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;left:6px;top:6px}
     .leaflet-tooltip.eatigo-slot-tooltip{width:290px;max-width:calc(100vw - 36px);padding:0;background:#0c2139;color:#fff;border:1px solid #31516f;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.45);white-space:normal}
     .eatigo-slot-tooltip:before{border-top-color:#31516f!important;border-bottom-color:#31516f!important;border-left-color:#31516f!important;border-right-color:#31516f!important}
     .slots-card{overflow:hidden;border-radius:11px}.slots-head{display:flex;align-items:flex-start;gap:10px;justify-content:space-between;padding:11px 12px 7px;background:#102b49;position:sticky;top:0;z-index:1}
     .restaurant-name{font-size:14px;line-height:1.25}.best-chip{flex:0 0 auto;border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:2px 7px;font-size:12px;font-weight:800}
-    .slot-address{padding:0 12px 8px;background:#102b49;color:#b9c9da;font-size:11px;line-height:1.35}
+    .slot-address{padding:0 12px 5px;background:#102b49;color:#b9c9da;font-size:11px;line-height:1.35}.slot-meta{padding:0 12px 8px;background:#102b49;color:#d7e4f2;font-size:11px;line-height:1.35}
     .slots-label{padding:8px 12px 4px;color:#9fb2ca;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
     .slots-scroll{max-height:190px;overflow-y:auto;padding:0 12px 6px;overscroll-behavior:contain}.slots-scroll table{width:100%;border-collapse:collapse;font-size:12px}.slots-scroll td{padding:3px 0;border-bottom:1px solid rgba(255,255,255,.07)}.slots-scroll td:last-child{text-align:right}
     .best-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#091a2d;border-top:1px solid #25415f;font-size:12px}.best-row strong{font-size:15px}
+    @media(max-width:880px){.filters{grid-template-columns:repeat(2,minmax(130px,1fr))}.location-group{grid-column:1/-1}.map{height:62vh}}
+    @media(max-width:560px){.filters{grid-template-columns:1fr 1fr;padding:10px}.location-group{grid-template-columns:1fr 92px}.location-group #useLocation{grid-column:1/-1}.bar{padding:8px 10px}.map{height:60vh;min-height:360px}}
   </style>
 </head>
 <body>
-<header><h1>Eatigo Live Discount Experiment</h1><div class="muted">Isolated prototype branch — does not affect the production site.</div></header>
-<div class="bar"><span id="status" class="status">Loading…</span><span class="legend">Pin = best still-bookable discount today. Hover for today's slots. Click opens Eatigo.</span></div>
+<header><h1>Eatigo Live Discount Experiment</h1><div class="muted">Full Singapore test branch — production remains untouched.</div></header>
+<section class="filters" aria-label="Map filters">
+  <div class="filter"><label for="cuisineFilter">Cuisine</label><select id="cuisineFilter"><option value="">All cuisines</option></select></div>
+  <div class="filter"><label for="discountFilter">Minimum discount</label><select id="discountFilter"><option value="0">Any discount</option><option value="20">20%+</option><option value="30">30%+</option><option value="40">40%+</option><option value="50">50% only</option></select></div>
+  <div class="filter"><label for="timeFilter">Available time</label><select id="timeFilter"><option value="all">Any remaining today</option><option value="next2">Next 2 hours</option><option value="lunch">Lunch · 11:00–15:00</option><option value="dinner">Dinner · 17:00–22:00</option><option value="late">Late · 21:00 onward</option></select></div>
+  <div class="filter"><label for="radiusFilter">Distance</label><select id="radiusFilter" disabled><option value="0">Any distance</option><option value="1">Within 1 km</option><option value="2">Within 2 km</option><option value="5">Within 5 km</option><option value="10">Within 10 km</option></select></div>
+  <div class="filter location-group"><label for="locationInput">Search from a location</label><input id="locationInput" placeholder="e.g. Bedok Mall, Orchard, 238801"><button id="setLocation" type="button">Set place</button><button id="useLocation" type="button">Use my location</button><div id="locationState" class="location-state">Set a place or use your location to enable distance filtering.</div></div>
+  <div class="filter filter-actions"><button id="resetFilters" class="reset" type="button">Reset filters</button></div>
+</section>
+<div class="bar"><span id="status" class="status">Loading…</span><span class="legend">Pin = best discount within the active time filter. Hover for slots; click opens Eatigo.</span></div>
 <div id="map" class="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="app.js"></script>
