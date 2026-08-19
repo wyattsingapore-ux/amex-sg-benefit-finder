@@ -1,7 +1,7 @@
 {
   "experiment": "eatigo-live-discounts-v1",
   "date_sg": "2026-08-19",
-  "fetched_at": "2026-08-19T15:10:07.800385+08:00",
+  "fetched_at": "2026-08-19T15:16:26.270037+08:00",
   "source": "Eatigo branch pages (ordinary HTTP; no Playwright)",
   "restaurants_attempted": 30,
   "restaurants_with_future_slots": 30,
